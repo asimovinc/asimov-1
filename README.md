@@ -17,6 +17,8 @@ Asimov is an open-source humanoid robot that you can build, train and customize.
 
 Asimov v1 is a 1.2 m, 35 kg biped with 25 actuated degrees of freedom. This repository contains the mechanical CAD, electrical harness, simulation model, and onboard software to build, simulate, and customize Asimov v1.
 
+![Asimov v1](assets/asimov-v1.jpg)
+
 ---
 
 ## Specifications
