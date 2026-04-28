@@ -65,9 +65,20 @@ Asimov v1 is a 1.2 m, 35 kg biped with 25 actuated degrees of freedom. This repo
 
 ### Self-source
 
-Pull the [BOM](https://manual.asimov.inc/v1/bom), source the parts, fabricate what needs fabricating.
+Start with the repo-local [fabrication manifest](mechanical/FABRICATION_MANIFEST.csv) for the CAD-derived part inventory, then cross-reference the [BOM](https://manual.asimov.inc/v1/bom) and assembly manual for procurement details, sourcing, and fabrication notes.
 
 **[Assembly Manual →](https://manual.asimov.inc)**
+
+---
+
+## Artifact validation
+
+The CAD-derived fabrication manifest and artifact references can be checked locally:
+
+```bash
+python3 scripts/generate_fabrication_manifest.py --check
+python3 scripts/validate_artifact_contract.py
+```
 
 ---
 
