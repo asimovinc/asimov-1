@@ -89,7 +89,7 @@ python3 scripts/validate_artifact_contract.py
 | ✅ | Mechanical CAD — 7 subassemblies |
 | ✅ | MuJoCo simulation model |
 | ✅ | Electrical wiring harness |
-| 🔜 | Electrical schematics & PCB files |
+| ✅ | Electrical schematics & PCB files |
 | 🔜 | Asimov API |
 | 🔜 | Locomotion policy |
 | 🔜 | Mobile app |

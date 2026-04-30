@@ -1,0 +1,181 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    fragment@0 {
+        target-path = "/mmc@fe2c0000";
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+    fragment@1 {
+        target-path = "/vbus5v0-typec";
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+
+    fragment@3 {
+        target-path = "/pcie@fe190000";
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+
+    fragment@4 {
+        target-path = "/i2c@feca0000/es8316@11";
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+
+    fragment@5 {
+        target = <&can0>;
+        __overlay__ {
+            compatible = "rockchip,can-2.0";
+            status = "okay";
+            assigned-clock-rates = <200000000>;
+            pinctrl-names = "default";
+            pinctrl-0 = <&can0m1_pins>;
+        };
+    };
+
+    fragment@6 {
+        target = <&can1>; 
+        __overlay__ {
+            compatible = "rockchip,can-2.0";
+            status = "okay";
+            assigned-clock-rates = <200000000>;
+            pinctrl-names = "default";
+            pinctrl-0 = <&can1m1_pins>;
+        };
+    };
+
+    fragment@7 {
+        target = <&can2>; 
+        __overlay__ {
+            compatible = "rockchip,can-2.0";
+            status = "okay";
+            assigned-clock-rates = <200000000>;
+            pinctrl-names = "default";
+            pinctrl-0 = <&can2m1_pins>;
+        };
+    };
+
+    fragment@8 {
+        target = <&spi0>;
+        __overlay__ {
+            status = "okay";
+            num-cs = <3>;
+            pinctrl-names = "default";
+            pinctrl-0 = <&spi0m2_pins &mcp2518_cs_pin0 &mcp2518_cs_pin1 &mcp2518_cs_pin2>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+            max-freq = <20000000>;
+
+            cs-gpios = <&gpio3 21 1>, <&gpio4 0 1>, <&gpio4 4 1>;
+
+            can3: mcp2518fd@0 {
+                status = "okay";
+                compatible = "microchip,mcp2518fd";
+                reg = <0>;
+                spi-max-frequency = <20000000>;
+
+                pinctrl-names = "default";
+                pinctrl-0 = <&mcp2518_spi0_int0>; 
+
+                interrupt-parent = <&gpio4>;
+                interrupts = <2 2>;
+
+                clocks = <&can_clock>;
+                vdd-supply = <&vcc_3v3_s3>;
+                xceiver-supply = <&vcc_3v3_s3>;
+            };
+            can4: mcp2518fd@1 {
+                status = "okay";
+                compatible = "microchip,mcp2518fd";
+                reg = <1>;
+                spi-max-frequency = <20000000>;
+                
+                pinctrl-names = "default";
+                pinctrl-0 = <&mcp2518_spi0_int1>; 
+
+                interrupt-parent = <&gpio4>;
+                interrupts = <1 2>;
+
+                clocks = <&can_clock>;
+                vdd-supply = <&vcc_3v3_s3>;
+                xceiver-supply = <&vcc_3v3_s3>;
+            };
+            can5: mcp2518fd@2 {
+                status = "okay";
+                compatible = "microchip,mcp2518fd";
+                reg = <2>;
+                spi-max-frequency = <20000000>;
+                
+                pinctrl-names = "default";
+                pinctrl-0 = <&mcp2518_spi0_int2>; 
+
+                interrupt-parent = <&gpio4>;
+                interrupts = <5 2>;
+
+                clocks = <&can_clock>;
+                vdd-supply = <&vcc_3v3_s3>;
+                xceiver-supply = <&vcc_3v3_s3>;
+            };
+        };
+    };
+
+    fragment@9 {
+        target = <&pinctrl>; 
+        __overlay__ {
+            mcp2518 {
+                mcp2518_spi0_int0: mcp2518-spi0-int0 {
+                    rockchip,pins = <4 2 0 &pcfg_pull_none>; 
+                };
+                mcp2518_spi0_int1: mcp2518-spi0-int1 {
+                    rockchip,pins = <4 1 0 &pcfg_pull_none>; 
+                };
+                mcp2518_spi0_int2: mcp2518-spi0-int2 {
+                    rockchip,pins = <4 5 0 &pcfg_pull_none>; 
+                };
+                mcp2518_cs_pin0: mcp2518-cs-pin0 {
+                    rockchip,pins = <3 21 0 &pcfg_pull_up_drv_level_5>;
+                };
+                mcp2518_cs_pin1: mcp2518-cs-pin1 {
+                    rockchip,pins = <4 0 0 &pcfg_pull_up_drv_level_5>;
+                };
+                mcp2518_cs_pin2: mcp2518-cs-pin2 {
+                    rockchip,pins = <4 4 0 &pcfg_pull_up_drv_level_5>;
+                };
+            };
+        };
+    };
+
+    fragment@10 {
+        target-path = "/";
+        __overlay__ {
+            can_clock: can-clock {
+                compatible = "fixed-clock";
+                #clock-cells = <0>;
+                clock-frequency  = <40000000>;
+            };
+        };
+    };
+
+    fragment@11 {
+        target = <&i2c8>;
+        __overlay__ {
+            status = "okay";
+            pinctrl-0 = <&i2c8m0_xfer>;
+        };
+    };
+
+    fragment@12 {
+        target = <&i2c7>;
+        __overlay__ {
+            status = "okay";
+            pinctrl-0 = <&i2c7m2_xfer>;
+        };
+    };
+};
