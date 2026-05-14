@@ -1,0 +1,8 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "Radxa_CM5")(type "KiCad")(uri "/home/jasshank/work/menlo/radxa-cm5-kicad/symbols/Radxa_CM5.kicad_sym")(options "")(descr ""))
+  (lib (name "easyeda2kicad")(type "KiCad")(uri "/home/jasshank/Documents/Kicad/easyeda2kicad/easyeda2kicad.kicad_sym")(options "")(descr ""))
+  (lib (name "SY8113B")(type "KiCad")(uri "/home/jasshank/Documents/Kicad/SY8113B.kicad_sym")(options "")(descr ""))
+  (lib (name "radxa_cm5")(type "KiCad")(uri "${KIPRJMOD}/radxa_cm5.kicad_sym")(options "")(descr ""))
+  (lib (name "lcsc_lib")(type "KiCad")(uri "${KIPRJMOD}/lcsc_lib.kicad_sym")(options "")(descr ""))
+)

@@ -1,0 +1,670 @@
+connectors:
+  "Left Ankle A":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Left Ankle B":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Left Knee":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Left Hip Pitch":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Left Hip Roll":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Left Hip Yaw":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Right Ankle A":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Right Ankle B":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Right Knee":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Right Hip Pitch":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Right Hip Roll":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Right Hip Yaw":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "BMS":
+    subtype: soldered
+    pinlabels: [CAN_H, CAN_L]
+  "BMS Root SIG":
+    type: "MOLEX KK 254 2 pin"
+    subtype: female
+    pinlabels: [CAN_H, CAN_L]
+  "Neck Pitch":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Neck Yaw":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Left Shoulder Pitch":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Left Shoulder Roll":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Left Shoulder Yaw":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Left Elbow":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Left Wrist Yaw":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Right Shoulder Pitch":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Right Shoulder Roll":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Right Shoulder Yaw":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Right Elbow":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Right Wrist Yaw":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Waist Yaw":
+    type: "XT30(2+2)"
+    subtype: female
+    pinlabels: [BATT+, BATT-, CAN_H, CAN_L]
+  "Left Leg Root SIG":
+    type: "MOLEX KK 254 2 pin"
+    subtype: female
+    pinlabels: [CAN_H, CAN_L]
+  "Right Leg Root SIG":
+    type: "MOLEX KK 254 2 pin"
+    subtype: female
+    pinlabels: [CAN_H, CAN_L]
+  "Lower Body PWR":
+    type: "XT-30"
+    subtype: female
+    pinlabels: [BATT+, BATT-]
+  "Left Arm PWR":
+    type: "XT-30"
+    subtype: female
+    pinlabels: [BATT+, BATT-]
+  "Right Arm PWR":
+    type: "XT-30"
+    subtype: female
+    pinlabels: [BATT+, BATT-]
+  "Neck-Waist PWR":
+    type: "XT-30"
+    subtype: female
+    pinlabels: [BATT+, BATT-]
+  "Left Arm Root SIG":
+    type: "MOLEX KK 254 2 pin"
+    subtype: female
+    pinlabels: [CAN_H, CAN_L]
+  "Right Arm Root SIG":
+    type: "MOLEX KK 254 2 pin"
+    subtype: female
+    pinlabels: [CAN_H, CAN_L]
+  "Neck-Waist Link 1":
+    type: "MOLEX KK 254 2 pin"
+    subtype: female
+    pinlabels: [CAN_H, CAN_L]
+  "Neck-Waist Root SIG":
+    type: "MOLEX KK 254 2 pin"
+    subtype: female
+    pinlabels: [CAN_H, CAN_L]
+  "Neck-Waist Link 2":
+    type: "MOLEX KK 254 2 pin"
+    subtype: female
+    pinlabels: [CAN_H, CAN_L]
+  "BMS Power":
+    type: "XT-60"
+    subtype: female
+    pinlabels: [BATT+, BATT-]
+  "BMS Power Sink":
+    type: "XT-30"
+    subtype: female
+    pinlabels: [BATT+, BATT-]
+
+cables:
+  # Left Leg Cables
+  W-1-PWR:
+    category: Hip Roll to Hip Yaw
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-1-SIG:
+    category: Hip Roll to Hip Yaw
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-2-PWR:
+    category: Hip Yaw to Knee
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-2-SIG:
+    category: Hip Yaw to Knee
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-3-PWR:
+    category: Knee to Ankle A
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-3-SIG:
+    category: Knee to Ankle A
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-4-PWR:
+    category: Ankle A to Ankle B
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-4-SIG:
+    category: Ankle A to Ankle B
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-5-PWR:
+    category: Hip Pitch to Hip Roll
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-5-SIG:
+    category: Hip Pitch to Hip Roll
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+
+  # Left Arm Cables
+  W-6-PWR:
+    category: Shoulder Pitch to Shoulder Roll
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-6-SIG:
+    category: Shoulder Pitch to Shoulder Roll
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-7-PWR:
+    category: Shoulder Roll to Shoulder Yaw
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-7-SIG:
+    category: Shoulder Roll to Shoulder Yaw
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-8-PWR:
+    category: Shoulder Yaw to Elbow
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-8-SIG:
+    category: Shoulder Yaw to Elbow
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-9-PWR:
+    category: Elbow to Wrist Yaw
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-9-SIG:
+    category: Elbow to Wrist Yaw
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+
+  # Head/Neck Cables
+  W-10-PWR:
+    category: Neck Yaw to Neck Pitch
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-10-SIG:
+    category: Neck Yaw to Neck Pitch
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+
+  # Right Leg Cables
+  W-11-PWR:
+    category: Hip Roll to Hip Yaw
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-11-SIG:
+    category: Hip Roll to Hip Yaw
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-12-PWR:
+    category: Hip Yaw to Knee
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-12-SIG:
+    category: Hip Yaw to Knee
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-13-PWR:
+    category: Knee to Ankle A
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-13-SIG:
+    category: Knee to Ankle A
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-14-PWR:
+    category: Ankle A to Ankle B
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-14-SIG:
+    category: Ankle A to Ankle B
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-15-PWR:
+    category: Hip Pitch to Hip Roll
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-15-SIG:
+    category: Hip Pitch to Hip Roll
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+
+  # Right Arm Cables
+  W-16-PWR:
+    category: Shoulder Pitch to Shoulder Roll
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-16-SIG:
+    category: Shoulder Pitch to Shoulder Roll
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-17-PWR:
+    category: Shoulder Roll to Shoulder Yaw
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-17-SIG:
+    category: Shoulder Roll to Shoulder Yaw
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-18-PWR:
+    category: Shoulder Yaw to Elbow
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-18-SIG:
+    category: Shoulder Yaw to Elbow
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-19-PWR:
+    category: Elbow to Wrist Yaw
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-19-SIG:
+    category: Elbow to Wrist Yaw
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+
+  # Root Cables
+  W-20-PWR:
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-21-SIG:
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-22-PWR:
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-23-SIG:
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-24-PWR:
+    category: Hip to Lower Body PWR
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-25-PWR:
+    category: Hip to Lower Body PWR
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-26-SIG:
+    category: Leg Root to Hip SIG
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-27-PWR:
+    category: Arm Root to Shoulder PWR
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-27-SIG:
+    category: Arm Root to Shoulder SIG
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-28-PWR:
+    category: Head Root to Neck PWR
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-28-SIG:
+    category: Head Root to Neck SIG
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-29-SIG:
+    category: Head Root to Neck SIG
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-30-SIG:
+    category: Leg Root to Hip SIG
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+  W-31-PWR:
+    category: Arm Root to Shoulder PWR
+    gauge: 17 AWG
+    wirecount: 2
+    colors: [RD, BK]
+  W-31-SIG:
+    category: Arm Root to Shoulder SIG
+    gauge: 26 AWG
+    wirecount: 2
+    colors: [WH, BK]
+
+connections:
+  # Left Leg Chain
+  -
+    - "Left Hip Pitch": [BATT+, BATT-]
+    - W-5-PWR: [1, 2]
+    - "Left Hip Roll": [BATT+, BATT-]
+  -
+    - "Left Hip Pitch": [CAN_H, CAN_L]
+    - W-5-SIG: [1, 2]
+    - "Left Hip Roll": [CAN_H, CAN_L]
+  -
+    - "Left Hip Roll": [BATT+, BATT-]
+    - W-1-PWR: [1, 2]
+    - "Left Hip Yaw": [BATT+, BATT-]
+  -
+    - "Left Hip Roll": [CAN_H, CAN_L]
+    - W-1-SIG: [1, 2]
+    - "Left Hip Yaw": [CAN_H, CAN_L]
+  -
+    - "Left Hip Yaw": [BATT+, BATT-]
+    - W-2-PWR: [1, 2]
+    - "Left Knee": [BATT+, BATT-]
+  -
+    - "Left Hip Yaw": [CAN_H, CAN_L]
+    - W-2-SIG: [1, 2]
+    - "Left Knee": [CAN_H, CAN_L]
+  -
+    - "Left Knee": [BATT+, BATT-]
+    - W-3-PWR: [1, 2]
+    - "Left Ankle A": [BATT+, BATT-]
+  -
+    - "Left Knee": [CAN_H, CAN_L]
+    - W-3-SIG: [1, 2]
+    - "Left Ankle A": [CAN_H, CAN_L]
+  -
+    - "Left Ankle A": [BATT+, BATT-]
+    - W-4-PWR: [1, 2]
+    - "Left Ankle B": [BATT+, BATT-]
+  -
+    - "Left Ankle A": [CAN_H, CAN_L]
+    - W-4-SIG: [1, 2]
+    - "Left Ankle B": [CAN_H, CAN_L]
+
+  # Right Leg Chain
+  -
+    - "Right Hip Pitch": [BATT+, BATT-]
+    - W-15-PWR: [1, 2]
+    - "Right Hip Roll": [BATT+, BATT-]
+  -
+    - "Right Hip Pitch": [CAN_H, CAN_L]
+    - W-15-SIG: [1, 2]
+    - "Right Hip Roll": [CAN_H, CAN_L]
+  -
+    - "Right Hip Roll": [BATT+, BATT-]
+    - W-11-PWR: [1, 2]
+    - "Right Hip Yaw": [BATT+, BATT-]
+  -
+    - "Right Hip Roll": [CAN_H, CAN_L]
+    - W-11-SIG: [1, 2]
+    - "Right Hip Yaw": [CAN_H, CAN_L]
+  -
+    - "Right Hip Yaw": [BATT+, BATT-]
+    - W-12-PWR: [1, 2]
+    - "Right Knee": [BATT+, BATT-]
+  -
+    - "Right Hip Yaw": [CAN_H, CAN_L]
+    - W-12-SIG: [1, 2]
+    - "Right Knee": [CAN_H, CAN_L]
+  -
+    - "Right Knee": [BATT+, BATT-]
+    - W-13-PWR: [1, 2]
+    - "Right Ankle A": [BATT+, BATT-]
+  -
+    - "Right Knee": [CAN_H, CAN_L]
+    - W-13-SIG: [1, 2]
+    - "Right Ankle A": [CAN_H, CAN_L]
+  -
+    - "Right Ankle A": [BATT+, BATT-]
+    - W-14-PWR: [1, 2]
+    - "Right Ankle B": [BATT+, BATT-]
+  -
+    - "Right Ankle A": [CAN_H, CAN_L]
+    - W-14-SIG: [1, 2]
+    - "Right Ankle B": [CAN_H, CAN_L]
+
+  # Left Arm Chain
+  -
+    - "Left Shoulder Pitch": [BATT+, BATT-]
+    - W-6-PWR: [1, 2]
+    - "Left Shoulder Roll": [BATT+, BATT-]
+  -
+    - "Left Shoulder Pitch": [CAN_H, CAN_L]
+    - W-6-SIG: [1, 2]
+    - "Left Shoulder Roll": [CAN_H, CAN_L]
+  -
+    - "Left Shoulder Roll": [BATT+, BATT-]
+    - W-7-PWR: [1, 2]
+    - "Left Shoulder Yaw": [BATT+, BATT-]
+  -
+    - "Left Shoulder Roll": [CAN_H, CAN_L]
+    - W-7-SIG: [1, 2]
+    - "Left Shoulder Yaw": [CAN_H, CAN_L]
+  -
+    - "Left Shoulder Yaw": [BATT+, BATT-]
+    - W-8-PWR: [1, 2]
+    - "Left Elbow": [BATT+, BATT-]
+  -
+    - "Left Shoulder Yaw": [CAN_H, CAN_L]
+    - W-8-SIG: [1, 2]
+    - "Left Elbow": [CAN_H, CAN_L]
+  -
+    - "Left Elbow": [BATT+, BATT-]
+    - W-9-PWR: [1, 2]
+    - "Left Wrist Yaw": [BATT+, BATT-]
+  -
+    - "Left Elbow": [CAN_H, CAN_L]
+    - W-9-SIG: [1, 2]
+    - "Left Wrist Yaw": [CAN_H, CAN_L]
+
+  # Right Arm Chain
+  -
+    - "Right Shoulder Pitch": [BATT+, BATT-]
+    - W-16-PWR: [1, 2]
+    - "Right Shoulder Roll": [BATT+, BATT-]
+  -
+    - "Right Shoulder Pitch": [CAN_H, CAN_L]
+    - W-16-SIG: [1, 2]
+    - "Right Shoulder Roll": [CAN_H, CAN_L]
+  -
+    - "Right Shoulder Roll": [BATT+, BATT-]
+    - W-17-PWR: [1, 2]
+    - "Right Shoulder Yaw": [BATT+, BATT-]
+  -
+    - "Right Shoulder Roll": [CAN_H, CAN_L]
+    - W-17-SIG: [1, 2]
+    - "Right Shoulder Yaw": [CAN_H, CAN_L]
+  -
+    - "Right Shoulder Yaw": [BATT+, BATT-]
+    - W-18-PWR: [1, 2]
+    - "Right Elbow": [BATT+, BATT-]
+  -
+    - "Right Shoulder Yaw": [CAN_H, CAN_L]
+    - W-18-SIG: [1, 2]
+    - "Right Elbow": [CAN_H, CAN_L]
+  -
+    - "Right Elbow": [BATT+, BATT-]
+    - W-19-PWR: [1, 2]
+    - "Right Wrist Yaw": [BATT+, BATT-]
+  -
+    - "Right Elbow": [CAN_H, CAN_L]
+    - W-19-SIG: [1, 2]
+    - "Right Wrist Yaw": [CAN_H, CAN_L]
+
+  # Head/Neck (separate from lower body)
+  -
+    - "Neck Yaw": [BATT+, BATT-]
+    - W-10-PWR: [1, 2]
+    - "Neck Pitch": [BATT+, BATT-]
+  -
+    - "Neck Yaw": [CAN_H, CAN_L]
+    - W-10-SIG: [1, 2]
+    - "Neck Pitch": [CAN_H, CAN_L]
+
+  # Lower Body Power
+  -
+    - "Lower Body PWR": [BATT+, BATT-]
+    - W-22-PWR: [1, 2]
+    - "Waist Yaw": [BATT+, BATT-]
+  -
+    - "Neck-Waist Link 2": [CAN_H, CAN_L]
+    - W-23-SIG: [1, 2]
+    - "Waist Yaw": [CAN_H, CAN_L]
+  -
+    - "Lower Body PWR": [BATT+, BATT-]
+    - W-24-PWR: [1, 2]
+    - "Left Hip Pitch": [BATT+, BATT-]
+  -
+    - "Lower Body PWR": [BATT+, BATT-]
+    - W-25-PWR: [1, 2]
+    - "Right Hip Pitch": [BATT+, BATT-]
+
+  # BMS Power Connections
+  -
+    - "BMS Power": [BATT+, BATT-]
+    - W-20-PWR: [1, 2]
+    - "BMS Power Sink": [BATT+, BATT-]
+
+  # BMS Signal Connections
+  -
+    - "BMS": [CAN_H, CAN_L]
+    - W-21-SIG: [1, 2]
+    - "BMS Root SIG": [CAN_H, CAN_L]
+
+  # Leg Root Signal Connections
+  -
+    - "Left Leg Root SIG": [CAN_H, CAN_L]
+    - W-26-SIG: [1, 2]
+    - "Left Hip Pitch": [CAN_H, CAN_L]
+  -
+    - "Right Leg Root SIG": [CAN_H, CAN_L]
+    - W-30-SIG: [1, 2]
+    - "Right Hip Pitch": [CAN_H, CAN_L]
+  # Left Arm Power
+  -
+    - "Left Arm PWR": [BATT+, BATT-]
+    - W-27-PWR: [1, 2]
+    - "Left Shoulder Pitch": [BATT+, BATT-]
+  -
+    - "Left Arm Root SIG": [CAN_H, CAN_L]
+    - W-27-SIG: [1, 2]
+    - "Left Shoulder Pitch": [CAN_H, CAN_L]
+
+  # Right Arm Power
+  -
+    - "Right Arm PWR": [BATT+, BATT-]
+    - W-31-PWR: [1, 2]
+    - "Right Shoulder Pitch": [BATT+, BATT-]
+  -
+    - "Right Arm Root SIG": [CAN_H, CAN_L]
+    - W-31-SIG: [1, 2]
+    - "Right Shoulder Pitch": [CAN_H, CAN_L]
+
+  # Neck-Waist Power
+  -
+    - "Neck-Waist PWR": [BATT+, BATT-]
+    - W-28-PWR: [1, 2]
+    - "Neck Yaw": [BATT+, BATT-]
+  -
+    - "Neck-Waist Link 1": [CAN_H, CAN_L]
+    - W-28-SIG: [1, 2]
+    - "Neck Yaw": [CAN_H, CAN_L]
+  -
+    - "Neck-Waist Root SIG": [CAN_H, CAN_L]
+    - W-29-SIG: [1, 2]
+    - "Neck Pitch": [CAN_H, CAN_L]
