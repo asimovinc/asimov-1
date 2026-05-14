@@ -2,30 +2,25 @@
 """
 mjcf2urdf.py — Convert Asimov v1 MJCF (sim-model/xmls/asimov.xml) to URDF.
 
-Strategy: use MuJoCo's own model loader to resolve all `default class` inheritance
-and quaternion math, then walk the body tree and emit URDF.
+Strategy: parse the source MJCF XML *as text* (not through MuJoCo's compiled
+model), so all positions/orientations are preserved literally. We only use
+MuJoCo's compiler to resolve `default class` inheritance for attributes we
+don't otherwise see (e.g. geom contype/conaffinity from a class).
 
-URDF/MJCF correspondence used here:
-- MJCF <body> with pos/quat (in parent body frame)
-    -> URDF <link>, and a <joint> from parent_link to this link whose
-       <origin xyz="pos" rpy="euler(quat)"/> carries the pose offset.
-- MJCF <inertial pos quat mass fullinertia/diaginertia> (in body frame)
-    -> URDF <inertial>; <origin xyz=com_pos rpy=euler(com_quat)/>;
-       <inertia ixx ixy ixz iyy iyz izz>.
-- MJCF <joint pos axis range type> (in body frame, hinge/slide)
-    -> URDF <joint type=revolute|continuous|prismatic>; <axis xyz/>;
-       <limit lower upper effort velocity/>.  URDF joint origin == body pose
-       offset above.  Joint pos offset (if non-zero) requires a fixed dummy
-       link; this MJCF has all joint pos == 0, so we skip that complication.
-- MJCF <geom type=mesh mesh=name> -> URDF <visual>/<collision> with mesh ref.
-- MJCF capsule collision geoms (fromto, size=radius) -> URDF <collision> with
-  <geometry><cylinder> approximation (capsules unsupported in URDF) plus
-  spheres at the endpoints, OR simply use the mesh for collision and let
-  IsaacGym/Bullet/etc. decimate. We choose the latter (mesh collision) for
-  simplicity; physics engines handle it.
+Key fixes over the previous compiled-model approach:
+- Mesh geoms keep their MJCF-literal pos/quat. MuJoCo's compiler shifts geom
+  positions to the mesh's center of mass for internal inertia accounting,
+  which silently broke our previous output.
+- Inertials use the body-frame components directly from MJCF's
+  fullinertia="ixx iyy izz ixy ixz iyz" with origin RPY=0. URDF technically
+  allows a rotated inertial frame, but many physics engines (IsaacGym
+  included) ignore the RPY and treat ixx/iyy/izz as body-frame diagonals.
 
-Free joint at the root is not emitted in URDF (the floating base is added by
-the simulator's RL env wrapper, not the URDF itself).
+URDF/MJCF correspondence:
+- MJCF <body pos quat>  -> URDF parent->child <joint><origin xyz rpy/>
+- MJCF <inertial pos fullinertia mass>  -> URDF <inertial>
+- MJCF <joint type=hinge pos axis range>  -> URDF <joint type=revolute>
+- MJCF <geom type=mesh mesh=name pos quat>  -> URDF <visual>/<collision>
 
 Run:
   python software/tools/mjcf2urdf.py \
@@ -38,282 +33,422 @@ from __future__ import annotations
 
 import argparse
 import math
-import os
 import shutil
-import sys
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
 import numpy as np
 
-try:
-    import mujoco
-except ImportError:
-    sys.exit("mujoco package not available — run with the lerobot conda env's python")
+
+def parse_floats(s, n=None):
+    if s is None:
+        return None
+    vals = [float(x) for x in s.split()]
+    if n is not None and len(vals) != n:
+        raise ValueError(f"expected {n} floats, got {len(vals)}: {s}")
+    return vals
 
 
-JOINT_TYPE_MAP = {
-    mujoco.mjtJoint.mjJNT_HINGE: "revolute",
-    mujoco.mjtJoint.mjJNT_SLIDE: "prismatic",
-}
-
-
-def quat_to_rpy(quat_wxyz):
-    """MuJoCo quaternion (w, x, y, z) -> URDF (roll, pitch, yaw) in radians."""
-    w, x, y, z = quat_wxyz
-    # roll (x-axis rotation)
+def quat_wxyz_to_rpy(wxyz):
+    """MuJoCo quaternion (w, x, y, z) -> URDF (roll, pitch, yaw)."""
+    w, x, y, z = wxyz
     sinr_cosp = 2 * (w * x + y * z)
     cosr_cosp = 1 - 2 * (x * x + y * y)
     roll = math.atan2(sinr_cosp, cosr_cosp)
-    # pitch (y-axis rotation)
     sinp = 2 * (w * y - z * x)
     if abs(sinp) >= 1:
         pitch = math.copysign(math.pi / 2, sinp)
     else:
         pitch = math.asin(sinp)
-    # yaw (z-axis rotation)
     siny_cosp = 2 * (w * z + x * y)
     cosy_cosp = 1 - 2 * (y * y + z * z)
     yaw = math.atan2(siny_cosp, cosy_cosp)
     return roll, pitch, yaw
 
 
+def get_attr_quat(elem):
+    """Read quat attribute as (w,x,y,z); default (1,0,0,0)."""
+    q = elem.get("quat")
+    if q is None:
+        return (1.0, 0.0, 0.0, 0.0)
+    return tuple(parse_floats(q, 4))
+
+
+def get_attr_pos(elem):
+    p = elem.get("pos")
+    if p is None:
+        return (0.0, 0.0, 0.0)
+    return tuple(parse_floats(p, 3))
+
+
 def fmt_vec(v, prec=8):
     return " ".join(f"{x:.{prec}g}" for x in v)
 
 
-def get_inertia_ixx_etc(model, body_id):
-    """MuJoCo stores diagonal inertia in body frame; off-diagonals are in the
-    inertial frame defined by body_iquat. We need the full inertia tensor in
-    the same frame as URDF <inertial><origin>, which is the inertial frame
-    (com_pos, com_quat). In that frame the inertia tensor is diagonal."""
-    diag = model.body_inertia[body_id]  # ixx, iyy, izz in inertial principal frame
-    return float(diag[0]), 0.0, 0.0, float(diag[1]), 0.0, float(diag[2])
+# ---------------------------------------------------------------------------
+# Default-class resolution
+# ---------------------------------------------------------------------------
+
+class Defaults:
+    """Tracks the active <default> class stack as we walk the MJCF tree."""
+
+    def __init__(self, mjcf_root):
+        # Map class_name -> { 'geom': {attr: val}, 'joint': {attr: val}, ... }
+        self.classes = {}
+        self._collect(mjcf_root.find("default"), parent_classes={})
+
+    def _collect(self, node, parent_classes):
+        if node is None:
+            return
+        # The top-level <default> may have a name="main" implicit class; gather
+        # its direct geom/joint children as the "main" class defaults.
+        for child in node:
+            if child.tag == "default":
+                cname = child.get("class")
+                if cname is None:
+                    continue
+                inherited = {k: dict(v) for k, v in parent_classes.items()}
+                # Recurse: collect inner defaults first
+                child_defaults = {}
+                for sub in child:
+                    if sub.tag == "default":
+                        continue
+                    # sub.tag is e.g. 'geom', 'joint'
+                    child_defaults[sub.tag] = dict(sub.attrib)
+                # Merge inherited + child's own
+                merged = {k: dict(v) for k, v in inherited.items()}
+                for tag, attrs in child_defaults.items():
+                    merged.setdefault(tag, {}).update(attrs)
+                self.classes[cname] = merged
+                # Recurse into nested defaults under this class
+                self._collect(child, merged)
+            # else: top-level geom/joint defaults (no class) — collected as 'main'
+        # Top-level geom/joint defaults form the implicit "main" class
+        if "main" not in self.classes:
+            main = {}
+            for child in node:
+                if child.tag == "default":
+                    continue
+                main[child.tag] = dict(child.attrib)
+            if main:
+                self.classes["main"] = main
+
+    def get(self, class_name, tag):
+        """Get the merged attribute dict for (class_name, tag), with fallback to 'main'."""
+        out = {}
+        if "main" in self.classes:
+            out.update(self.classes["main"].get(tag, {}))
+        if class_name and class_name in self.classes:
+            out.update(self.classes[class_name].get(tag, {}))
+        return out
 
 
-def build_urdf(mjcf_path: Path, mesh_rel: str, robot_name: str) -> ET.Element:
-    model = mujoco.MjModel.from_xml_path(str(mjcf_path))
+def resolved_attrs(elem, defaults: Defaults):
+    """Return elem's attributes merged with its class defaults."""
+    cls = elem.get("class")
+    base = defaults.get(cls, elem.tag)
+    out = dict(base)
+    out.update(elem.attrib)
+    return out
+
+
+# ---------------------------------------------------------------------------
+# URDF emission
+# ---------------------------------------------------------------------------
+
+def emit_inertial(parent_urdf, mjcf_inertial):
+    """MJCF <inertial pos quat? mass fullinertia|diaginertia> -> URDF <inertial>.
+
+    URDF inertial origin RPY is forced to 0; we transform the principal-axis
+    diaginertia to body frame when MJCF specifies it via diaginertia+quat.
+    """
+    pos = get_attr_pos(mjcf_inertial)
+    mass = float(mjcf_inertial.get("mass"))
+
+    fullinertia = mjcf_inertial.get("fullinertia")
+    diaginertia = mjcf_inertial.get("diaginertia")
+    iquat = get_attr_quat(mjcf_inertial)
+
+    if fullinertia is not None:
+        # MJCF order: ixx iyy izz ixy ixz iyz (already in body frame)
+        ixx, iyy, izz, ixy, ixz, iyz = parse_floats(fullinertia, 6)
+    elif diaginertia is not None:
+        I1, I2, I3 = parse_floats(diaginertia, 3)
+        # If inertial has a quat, rotate diag(I1,I2,I3) into body frame
+        if iquat != (1.0, 0.0, 0.0, 0.0):
+            w, x, y, z = iquat
+            # Build rotation matrix R from quaternion
+            R = np.array([
+                [1 - 2*(y*y + z*z), 2*(x*y - z*w),     2*(x*z + y*w)],
+                [2*(x*y + z*w),     1 - 2*(x*x + z*z), 2*(y*z - x*w)],
+                [2*(x*z - y*w),     2*(y*z + x*w),     1 - 2*(x*x + y*y)],
+            ])
+            I_principal = np.diag([I1, I2, I3])
+            I_body = R @ I_principal @ R.T
+            ixx, iyy, izz = I_body[0, 0], I_body[1, 1], I_body[2, 2]
+            ixy, ixz, iyz = I_body[0, 1], I_body[0, 2], I_body[1, 2]
+        else:
+            ixx, iyy, izz = I1, I2, I3
+            ixy = ixz = iyz = 0.0
+    else:
+        raise ValueError("inertial missing both fullinertia and diaginertia")
+
+    inertial = ET.SubElement(parent_urdf, "inertial")
+    ET.SubElement(inertial, "origin", xyz=fmt_vec(pos), rpy="0 0 0")
+    ET.SubElement(inertial, "mass", value=f"{mass:.10g}")
+    ET.SubElement(
+        inertial, "inertia",
+        ixx=f"{ixx:.10g}", ixy=f"{ixy:.10g}", ixz=f"{ixz:.10g}",
+        iyy=f"{iyy:.10g}", iyz=f"{iyz:.10g}", izz=f"{izz:.10g}",
+    )
+
+
+def parse_mesh_table(mjcf_root):
+    """Return dict: mesh_name -> file path (as written in MJCF asset)."""
+    table = {}
+    asset = mjcf_root.find("asset")
+    if asset is None:
+        return table
+    for m in asset.findall("mesh"):
+        mname = m.get("name")
+        mfile = m.get("file") or m.get("name")
+        table[mname] = mfile
+    return table
+
+
+def emit_geoms(link_urdf, mjcf_body, defaults, mesh_table, mesh_rel):
+    """Emit URDF <visual>/<collision> for each <geom> child of a body."""
+    for geom in mjcf_body.findall("geom"):
+        attrs = resolved_attrs(geom, defaults)
+        gtype = attrs.get("type", "sphere")
+        gname = attrs.get("name", "")
+
+        contype = int(attrs.get("contype", 1))
+        conaffinity = int(attrs.get("conaffinity", 1))
+        group = int(attrs.get("group", 0))
+        is_visual = (contype == 0 and conaffinity == 0) or group == 2
+        is_collision = not is_visual
+        # Some geoms are both visual+collision in MJCF; in URDF emit only one
+        # (collision if it has contact, otherwise visual).
+        tag = "collision" if is_collision else "visual"
+
+        # Common origin (use literal MJCF values, not compiled)
+        pos = parse_floats(attrs.get("pos", "0 0 0"), 3)
+        quat = parse_floats(attrs.get("quat", "1 0 0 0"), 4)
+        rpy = quat_wxyz_to_rpy(quat)
+
+        if gtype == "mesh":
+            mesh_name = attrs.get("mesh")
+            if mesh_name is None:
+                continue
+            mesh_file = mesh_table.get(mesh_name, mesh_name)
+            node = ET.SubElement(link_urdf, tag, name=gname or f"{tag}")
+            ET.SubElement(node, "origin", xyz=fmt_vec(pos), rpy=fmt_vec(rpy))
+            geom_node = ET.SubElement(node, "geometry")
+            ET.SubElement(geom_node, "mesh", filename=f"{mesh_rel}/{mesh_file}")
+
+        elif gtype == "capsule":
+            # MJCF capsule: either size="r halflen" + pos/quat, or fromto="x1 y1 z1 x2 y2 z2" size="r"
+            fromto = attrs.get("fromto")
+            if fromto is not None:
+                ft = parse_floats(fromto, 6)
+                p1 = np.array(ft[:3]); p2 = np.array(ft[3:])
+                mid = (p1 + p2) / 2
+                axis_vec = p2 - p1
+                length = float(np.linalg.norm(axis_vec))
+                if length < 1e-9:
+                    continue
+                z_hat = axis_vec / length
+                # Find rotation that takes +Z to z_hat
+                z0 = np.array([0., 0., 1.])
+                v = np.cross(z0, z_hat)
+                c = float(np.dot(z0, z_hat))
+                if np.linalg.norm(v) < 1e-9:
+                    # Aligned or anti-aligned
+                    if c > 0:
+                        R = np.eye(3)
+                    else:
+                        R = np.diag([1, -1, -1])
+                else:
+                    s = np.linalg.norm(v)
+                    vx = np.array([
+                        [0, -v[2], v[1]],
+                        [v[2], 0, -v[0]],
+                        [-v[1], v[0], 0],
+                    ])
+                    R = np.eye(3) + vx + vx @ vx * ((1 - c) / (s * s))
+                # Extract RPY from R
+                cap_rpy = matrix_to_rpy(R)
+                radius = float(attrs.get("size", "0.01").split()[0])
+                node = ET.SubElement(link_urdf, tag, name=gname or f"{tag}")
+                ET.SubElement(node, "origin", xyz=fmt_vec(mid), rpy=fmt_vec(cap_rpy))
+                geom_node = ET.SubElement(node, "geometry")
+                # URDF has no capsule — use cylinder approximation
+                ET.SubElement(geom_node, "cylinder",
+                              radius=f"{radius:.6g}", length=f"{length:.6g}")
+            else:
+                size = parse_floats(attrs.get("size"), 2)
+                radius, halflen = size
+                node = ET.SubElement(link_urdf, tag, name=gname or f"{tag}")
+                ET.SubElement(node, "origin", xyz=fmt_vec(pos), rpy=fmt_vec(rpy))
+                geom_node = ET.SubElement(node, "geometry")
+                ET.SubElement(geom_node, "cylinder",
+                              radius=f"{radius:.6g}", length=f"{2*halflen:.6g}")
+
+        elif gtype == "sphere":
+            r = float(attrs.get("size", "0.01").split()[0])
+            node = ET.SubElement(link_urdf, tag, name=gname or f"{tag}")
+            ET.SubElement(node, "origin", xyz=fmt_vec(pos), rpy=fmt_vec(rpy))
+            geom_node = ET.SubElement(node, "geometry")
+            ET.SubElement(geom_node, "sphere", radius=f"{r:.6g}")
+
+        elif gtype == "box":
+            sz = parse_floats(attrs.get("size"), 3)
+            node = ET.SubElement(link_urdf, tag, name=gname or f"{tag}")
+            ET.SubElement(node, "origin", xyz=fmt_vec(pos), rpy=fmt_vec(rpy))
+            geom_node = ET.SubElement(node, "geometry")
+            ET.SubElement(geom_node, "box",
+                          size=fmt_vec([2*sz[0], 2*sz[1], 2*sz[2]]))
+
+        elif gtype == "plane":
+            continue  # world geom
+        else:
+            print(f"  WARN: unsupported geom type '{gtype}' on {mjcf_body.get('name')}, skipped")
+
+
+def matrix_to_rpy(R):
+    """Extract URDF RPY (roll,pitch,yaw) from 3x3 rotation matrix."""
+    sy = math.sqrt(R[0, 0] ** 2 + R[1, 0] ** 2)
+    if sy > 1e-6:
+        roll = math.atan2(R[2, 1], R[2, 2])
+        pitch = math.atan2(-R[2, 0], sy)
+        yaw = math.atan2(R[1, 0], R[0, 0])
+    else:
+        roll = math.atan2(-R[1, 2], R[1, 1])
+        pitch = math.atan2(-R[2, 0], sy)
+        yaw = 0.0
+    return roll, pitch, yaw
+
+
+JOINT_TYPE_MAP = {
+    "hinge": "revolute",
+    "slide": "prismatic",
+}
+
+
+def walk_body(mjcf_body, parent_link_name, robot_urdf, defaults, mesh_table,
+              mesh_rel, fix_joints):
+    """Recursively emit URDF for a MJCF <body> and its descendants."""
+    bname = mjcf_body.get("name")
+    if bname is None:
+        return
+
+    # 1) Emit <link>
+    link = ET.SubElement(robot_urdf, "link", name=bname)
+    inertial_elem = mjcf_body.find("inertial")
+    if inertial_elem is not None:
+        emit_inertial(link, inertial_elem)
+    emit_geoms(link, mjcf_body, defaults, mesh_table, mesh_rel)
+
+    # 2) Emit <joint> from parent_link_name -> bname (if not root)
+    if parent_link_name is not None:
+        body_pos = get_attr_pos(mjcf_body)
+        body_quat = get_attr_quat(mjcf_body)
+        body_rpy = quat_wxyz_to_rpy(body_quat)
+
+        mjcf_joints = [j for j in mjcf_body.findall("joint")]
+        mjcf_freejoint = mjcf_body.find("freejoint")
+
+        if mjcf_freejoint is not None:
+            # Floating base — not emitted in URDF; the simulator provides it.
+            pass
+        elif not mjcf_joints:
+            j = ET.SubElement(robot_urdf, "joint",
+                              name=f"{bname}_fixed", type="fixed")
+            ET.SubElement(j, "origin", xyz=fmt_vec(body_pos), rpy=fmt_vec(body_rpy))
+            ET.SubElement(j, "parent", link=parent_link_name)
+            ET.SubElement(j, "child", link=bname)
+        else:
+            if len(mjcf_joints) > 1:
+                print(f"  WARN: {bname} has {len(mjcf_joints)} joints; URDF supports 1 per pair")
+            mj = mjcf_joints[0]
+            jname = mj.get("name")
+            jtype_mj = mj.get("type", "hinge")
+            jattrs = resolved_attrs(mj, defaults)
+
+            if jname in fix_joints:
+                j = ET.SubElement(robot_urdf, "joint", name=jname, type="fixed")
+                ET.SubElement(j, "origin", xyz=fmt_vec(body_pos), rpy=fmt_vec(body_rpy))
+                ET.SubElement(j, "parent", link=parent_link_name)
+                ET.SubElement(j, "child", link=bname)
+            elif jtype_mj not in JOINT_TYPE_MAP:
+                print(f"  WARN: joint {jname} type {jtype_mj} unsupported -> fixed")
+                j = ET.SubElement(robot_urdf, "joint", name=jname, type="fixed")
+                ET.SubElement(j, "origin", xyz=fmt_vec(body_pos), rpy=fmt_vec(body_rpy))
+                ET.SubElement(j, "parent", link=parent_link_name)
+                ET.SubElement(j, "child", link=bname)
+            else:
+                urdf_type = JOINT_TYPE_MAP[jtype_mj]
+                axis = parse_floats(jattrs.get("axis", "0 0 1"), 3)
+                jpos = parse_floats(jattrs.get("pos", "0 0 0"), 3)
+                if any(abs(p) > 1e-9 for p in jpos):
+                    print(f"  WARN: joint {jname} has non-zero pos {jpos} (URDF cannot represent directly)")
+                rng = jattrs.get("range")
+                limited = jattrs.get("limited")
+                # MuJoCo: if range is set, treat as limited unless explicitly false
+                has_range = rng is not None and (limited != "false")
+                if urdf_type == "revolute" and not has_range:
+                    urdf_type = "continuous"
+
+                j = ET.SubElement(robot_urdf, "joint", name=jname, type=urdf_type)
+                ET.SubElement(j, "origin", xyz=fmt_vec(body_pos), rpy=fmt_vec(body_rpy))
+                ET.SubElement(j, "parent", link=parent_link_name)
+                ET.SubElement(j, "child", link=bname)
+                ET.SubElement(j, "axis", xyz=fmt_vec(axis))
+
+                if urdf_type in ("revolute", "prismatic"):
+                    lo, hi = parse_floats(rng, 2)
+                    ET.SubElement(j, "limit",
+                                  lower=f"{lo:.6g}", upper=f"{hi:.6g}",
+                                  effort="200", velocity="20")
+                else:
+                    ET.SubElement(j, "limit", effort="200", velocity="20")
+
+                damping = jattrs.get("damping")
+                if damping and float(damping) > 0:
+                    ET.SubElement(j, "dynamics", damping=f"{float(damping):.6g}")
+
+    # 3) Recurse into child bodies
+    for child_body in mjcf_body.findall("body"):
+        walk_body(child_body, bname, robot_urdf, defaults, mesh_table,
+                  mesh_rel, fix_joints)
+
+
+def build_urdf(mjcf_path: Path, mesh_rel: str, robot_name: str, fix_joints=None):
+    fix_joints = set(fix_joints or [])
+    tree = ET.parse(str(mjcf_path))
+    mjcf_root = tree.getroot()
+
+    defaults = Defaults(mjcf_root)
+    mesh_table = parse_mesh_table(mjcf_root)
+
+    worldbody = mjcf_root.find("worldbody")
+    if worldbody is None:
+        raise ValueError("MJCF has no <worldbody>")
 
     robot = ET.Element("robot", name=robot_name)
 
-    # 1) Walk all bodies (skip world at index 0)
-    body_names = []
-    for bid in range(model.nbody):
-        bname = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, bid)
-        body_names.append(bname)
-
-    # collect mesh names + filenames
-    mesh_files = {}
-    for mid in range(model.nmesh):
-        mname = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_MESH, mid)
-        # MuJoCo stores the file in model.mesh_pathadr (path inside paths)
-        adr = model.mesh_pathadr[mid]
-        fname_bytes = bytes(model.paths[adr:]).split(b"\x00", 1)[0]
-        fname = fname_bytes.decode("utf-8", errors="replace")
-        # In this MJCF, mesh name often == basename of file; we use the file
-        mesh_files[mname] = fname or mname
-
-    # group geoms by body
-    geoms_by_body = {bid: [] for bid in range(model.nbody)}
-    for gid in range(model.ngeom):
-        bid = int(model.geom_bodyid[gid])
-        geoms_by_body[bid].append(gid)
-
-    # group joints by body (only one expected per body for this robot)
-    joints_by_body = {bid: [] for bid in range(model.nbody)}
-    for jid in range(model.njnt):
-        bid = int(model.jnt_bodyid[jid])
-        joints_by_body[bid].append(jid)
-
-    # 2) For each non-world body, emit a <link>
-    for bid in range(1, model.nbody):
-        bname = body_names[bid]
-        link = ET.SubElement(robot, "link", name=bname)
-
-        mass = float(model.body_mass[bid])
-        if mass > 0:
-            inertial = ET.SubElement(link, "inertial")
-            ipos = model.body_ipos[bid]
-            iquat = model.body_iquat[bid]
-            rpy = quat_to_rpy(iquat)
-            ET.SubElement(
-                inertial,
-                "origin",
-                xyz=fmt_vec(ipos),
-                rpy=fmt_vec(rpy),
-            )
-            ET.SubElement(inertial, "mass", value=f"{mass:.10g}")
-            ixx, ixy, ixz, iyy, iyz, izz = get_inertia_ixx_etc(model, bid)
-            ET.SubElement(
-                inertial,
-                "inertia",
-                ixx=f"{ixx:.10g}",
-                ixy=f"{ixy:.10g}",
-                ixz=f"{ixz:.10g}",
-                iyy=f"{iyy:.10g}",
-                iyz=f"{iyz:.10g}",
-                izz=f"{izz:.10g}",
-            )
-
-        # geoms: split into visual (mesh, contype=0 typically) and collision
-        for gid in geoms_by_body[bid]:
-            gname = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_GEOM, gid) or ""
-            gtype = model.geom_type[gid]
-            grp = int(model.geom_group[gid])
-            # gpos/gquat are in body frame
-            gpos = model.geom_pos[gid]
-            gquat = model.geom_quat[gid]
-            rpy = quat_to_rpy(gquat)
-
-            if gtype == mujoco.mjtGeom.mjGEOM_MESH:
-                meshid = int(model.geom_dataid[gid])
-                mname = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_MESH, meshid)
-                fname = mesh_files.get(mname, mname + ".STL")
-                # decide visual vs collision: MJCF default `class="visual"` has contype=0
-                contype = int(model.geom_contype[gid])
-                conaffinity = int(model.geom_conaffinity[gid])
-                is_visual = (contype == 0 and conaffinity == 0) or grp == 2
-                tag = "visual" if is_visual else "collision"
-                node = ET.SubElement(link, tag, name=gname or f"{bname}_{tag}")
-                ET.SubElement(node, "origin", xyz=fmt_vec(gpos), rpy=fmt_vec(rpy))
-                geom = ET.SubElement(node, "geometry")
-                ET.SubElement(geom, "mesh", filename=f"{mesh_rel}/{fname}")
-            else:
-                # primitive collision (capsule/sphere/box/cylinder/plane).
-                # URDF supports box / cylinder / sphere. Map capsule -> cylinder
-                # (lossy: misses hemispherical caps but adequate for self-collision).
-                if gtype == mujoco.mjtGeom.mjGEOM_PLANE:
-                    continue  # floor is the world, not a body geom
-                contype = int(model.geom_contype[gid])
-                tag = "collision" if (contype != 0 or grp == 3) else "visual"
-                size = model.geom_size[gid]
-
-                if gtype == mujoco.mjtGeom.mjGEOM_CAPSULE:
-                    # MuJoCo capsule defined either by size=(r, halflen) with
-                    # geom origin at body frame, OR by fromto. After compile,
-                    # geom_pos is the midpoint and geom_size = (r, halflen, 0).
-                    r = float(size[0])
-                    halflen = float(size[1])
-                    node = ET.SubElement(link, tag, name=gname or f"{bname}_{tag}")
-                    ET.SubElement(node, "origin", xyz=fmt_vec(gpos), rpy=fmt_vec(rpy))
-                    geom = ET.SubElement(node, "geometry")
-                    ET.SubElement(
-                        geom,
-                        "cylinder",
-                        radius=f"{r:.6g}",
-                        length=f"{2*halflen:.6g}",
-                    )
-                elif gtype == mujoco.mjtGeom.mjGEOM_SPHERE:
-                    node = ET.SubElement(link, tag, name=gname or f"{bname}_{tag}")
-                    ET.SubElement(node, "origin", xyz=fmt_vec(gpos), rpy=fmt_vec(rpy))
-                    geom = ET.SubElement(node, "geometry")
-                    ET.SubElement(geom, "sphere", radius=f"{float(size[0]):.6g}")
-                elif gtype == mujoco.mjtGeom.mjGEOM_BOX:
-                    node = ET.SubElement(link, tag, name=gname or f"{bname}_{tag}")
-                    ET.SubElement(node, "origin", xyz=fmt_vec(gpos), rpy=fmt_vec(rpy))
-                    geom = ET.SubElement(node, "geometry")
-                    ET.SubElement(geom, "box", size=fmt_vec([2*size[0], 2*size[1], 2*size[2]]))
-                # other primitives: skip with a warning
-                else:
-                    print(f"  WARN: unsupported geom type {gtype} on {bname}, skipped")
-
-    # 3) Emit joints: each non-world body has one joint (parent->this)
-    for bid in range(1, model.nbody):
-        bname = body_names[bid]
-        parent_bid = int(model.body_parentid[bid])
-        parent_name = body_names[parent_bid] if parent_bid > 0 else None
-
-        body_pos = model.body_pos[bid]
-        body_quat = model.body_quat[bid]
-        rpy = quat_to_rpy(body_quat)
-
-        jids = joints_by_body[bid]
-
-        if parent_bid == 0:
-            # Root body. In URDF, root link has no parent joint.
-            # If MJCF root has a freejoint, we drop it (sim wrapper provides floating base).
-            continue
-
-        if len(jids) == 0:
-            # Fixed link
-            joint = ET.SubElement(
-                robot, "joint", name=f"{bname}_fixed", type="fixed"
-            )
-            ET.SubElement(joint, "origin", xyz=fmt_vec(body_pos), rpy=fmt_vec(rpy))
-            ET.SubElement(joint, "parent", link=parent_name)
-            ET.SubElement(joint, "child", link=bname)
-            continue
-
-        if len(jids) > 1:
-            print(f"  WARN: {bname} has {len(jids)} joints; URDF supports only 1 per pair")
-
-        jid = jids[0]
-        jname = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, jid)
-        jtype_mj = int(model.jnt_type[jid])
-        if jtype_mj == mujoco.mjtJoint.mjJNT_FREE:
-            # floating base — emit nothing; sim wrapper will add it
-            continue
-        if jtype_mj not in JOINT_TYPE_MAP:
-            print(f"  WARN: joint {jname} type {jtype_mj} unsupported, emitting fixed")
-            joint = ET.SubElement(robot, "joint", name=jname, type="fixed")
-            ET.SubElement(joint, "origin", xyz=fmt_vec(body_pos), rpy=fmt_vec(rpy))
-            ET.SubElement(joint, "parent", link=parent_name)
-            ET.SubElement(joint, "child", link=bname)
-            continue
-
-        urdf_type = JOINT_TYPE_MAP[jtype_mj]
-        limited = bool(model.jnt_limited[jid])
-        # MJCF axis is in body frame (= URDF joint frame here, since joint pos == 0)
-        axis = model.jnt_axis[jid].copy()
-        jpos = model.jnt_pos[jid]
-        if np.linalg.norm(jpos) > 1e-9:
-            print(f"  WARN: joint {jname} has non-zero pos {jpos} in body frame; "
-                  "URDF cannot represent this directly. Effective behavior differs.")
-
-        if urdf_type == "revolute" and not limited:
-            urdf_type = "continuous"
-
-        joint = ET.SubElement(robot, "joint", name=jname, type=urdf_type)
-        ET.SubElement(joint, "origin", xyz=fmt_vec(body_pos), rpy=fmt_vec(rpy))
-        ET.SubElement(joint, "parent", link=parent_name)
-        ET.SubElement(joint, "child", link=bname)
-        ET.SubElement(joint, "axis", xyz=fmt_vec(axis))
-
-        # Effort/velocity: URDF requires them for revolute/prismatic. MJCF
-        # doesn't carry these as joint attrs (they're in actuators). Use
-        # sane defaults; downstream env configs can override.
-        if urdf_type in ("revolute", "prismatic"):
-            lower, upper = (
-                float(model.jnt_range[jid][0]),
-                float(model.jnt_range[jid][1]),
-            )
-            if not limited:
-                lower, upper = -math.pi, math.pi
-            ET.SubElement(
-                joint,
-                "limit",
-                lower=f"{lower:.6g}",
-                upper=f"{upper:.6g}",
-                effort="200",
-                velocity="20",
-            )
-        elif urdf_type == "continuous":
-            ET.SubElement(joint, "limit", effort="200", velocity="20")
-
-        # Carry armature as <dynamics damping="..."> hint if present
-        armature = float(model.dof_armature[model.jnt_dofadr[jid]])
-        damping = float(model.dof_damping[model.jnt_dofadr[jid]])
-        if armature > 0 or damping > 0:
-            dyn = ET.SubElement(joint, "dynamics")
-            if damping > 0:
-                dyn.set("damping", f"{damping:.6g}")
-            if armature > 0:
-                dyn.set("friction", "0")  # placeholder; armature has no URDF analog
+    # Find the (single) root body under worldbody
+    root_bodies = worldbody.findall("body")
+    if len(root_bodies) != 1:
+        print(f"  WARN: found {len(root_bodies)} root bodies; using the first")
+    walk_body(root_bodies[0], None, robot, defaults, mesh_table, mesh_rel,
+              fix_joints)
 
     return robot
 
 
-def prettify(elem: ET.Element) -> str:
+def prettify(elem):
     from xml.dom import minidom
     rough = ET.tostring(elem, encoding="utf-8")
     return minidom.parseString(rough).toprettyxml(indent="  ")
@@ -333,11 +468,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mjcf", required=True, type=Path)
     ap.add_argument("--out", required=True, type=Path)
-    ap.add_argument("--mesh-src", type=Path, default=None,
-                    help="Directory of source STL files (default: <mjcf parent>/../assets/meshes)")
-    ap.add_argument("--mesh-rel", default="../meshes",
-                    help="Relative path from URDF to mesh dir (URDF mesh filename prefix)")
+    ap.add_argument("--mesh-src", type=Path, default=None)
+    ap.add_argument("--mesh-rel", default="../meshes")
     ap.add_argument("--name", default="asimov_v1")
+    ap.add_argument("--fix-joints", default="")
     args = ap.parse_args()
 
     mjcf_path = args.mjcf.resolve()
@@ -345,12 +479,14 @@ def main():
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     print(f"Loading MJCF: {mjcf_path}")
-    robot = build_urdf(mjcf_path, args.mesh_rel, args.name)
+    fix_joints = [s.strip() for s in args.fix_joints.split(",") if s.strip()]
+    if fix_joints:
+        print(f"  fixing joints: {fix_joints}")
+    robot = build_urdf(mjcf_path, args.mesh_rel, args.name, fix_joints=fix_joints)
 
     out_path.write_text(prettify(robot), encoding="utf-8")
     print(f"Wrote URDF: {out_path}")
 
-    # Copy meshes
     mesh_src = args.mesh_src or (mjcf_path.parent.parent / "assets" / "meshes")
     mesh_dst = (out_path.parent / args.mesh_rel).resolve()
     if mesh_src.is_dir():
