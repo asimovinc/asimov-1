@@ -31,6 +31,9 @@
 # Copyright (c) 2024, AgiBot Inc. All rights reserved.
 
 
+# IsaacGym must be imported before torch (it patches torch internals).
+import isaacgym  # noqa: F401
+
 from asimov_rl.envs import *
 from asimov_rl.utils import get_args, task_registry
 

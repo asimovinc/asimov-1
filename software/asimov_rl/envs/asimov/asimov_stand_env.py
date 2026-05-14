@@ -32,8 +32,8 @@
 
 from asimov_rl.envs.base.legged_robot_config import LeggedRobotCfg
 
-#from isaacgym.torch_utils import *
-#from isaacgym import gymtorch, gymapi
+from isaacgym.torch_utils import *
+from isaacgym import gymtorch, gymapi
 from asimov_rl.utils.math import wrap_to_pi
 
 

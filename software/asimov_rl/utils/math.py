@@ -33,7 +33,7 @@
 import torch
 from torch import Tensor
 import numpy as np
-#from isaacgym.torch_utils import quat_apply, normalize
+from isaacgym.torch_utils import quat_apply, normalize
 from typing import Tuple
 
 # @ torch.jit.script

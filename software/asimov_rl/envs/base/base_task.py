@@ -31,8 +31,8 @@
 # Copyright (c) 2024, AgiBot Inc. All rights reserved.
 
 import sys
-#from isaacgym import gymapi
-#from isaacgym import gymutil
+from isaacgym import gymapi
+from isaacgym import gymutil
 import numpy as np
 import torch
 

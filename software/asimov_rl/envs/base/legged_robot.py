@@ -33,8 +33,8 @@
 import os
 import numpy as np
 
-#from isaacgym.torch_utils import *
-#from isaacgym import gymtorch, gymapi, gymutil
+from isaacgym.torch_utils import *
+from isaacgym import gymtorch, gymapi, gymutil
 from collections import deque
 
 import torch
