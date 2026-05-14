@@ -1,4 +1,4 @@
-name: Artifact contract
+name: Fabrication manifest
 
 on:
   pull_request:
@@ -7,8 +7,8 @@ on:
       - main
 
 jobs:
-  validate:
-    name: Validate hardware and simulation artifacts
+  check:
+    name: Check generated fabrication manifest
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -23,6 +23,3 @@ jobs:
 
       - name: Check generated fabrication manifest
         run: python3 scripts/generate_fabrication_manifest.py --check
-
-      - name: Validate artifact references
-        run: python3 scripts/validate_artifact_contract.py

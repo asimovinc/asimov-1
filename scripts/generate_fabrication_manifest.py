@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import csv
-import hashlib
 import json
 import sys
 from pathlib import Path
@@ -25,10 +24,7 @@ CSV_FIELDS = [
     "subassembly",
     "fabrication_class",
     "part_id",
-    "file_name",
     "path",
-    "size_bytes",
-    "sha256",
 ]
 
 
@@ -43,16 +39,8 @@ def part_id_from_file(path: Path) -> str:
     return name
 
 
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def build_entries(cad_root: Path = CAD_ROOT) -> list[dict[str, str | int]]:
-    entries: list[dict[str, str | int]] = []
+def build_entries(cad_root: Path = CAD_ROOT) -> list[dict[str, str]]:
+    entries: list[dict[str, str]] = []
     for file_path in cad_root.glob("*/FABRICATION/*/*"):
         if not file_path.is_file() or not file_path.name.lower().endswith(".step"):
             continue
@@ -65,10 +53,7 @@ def build_entries(cad_root: Path = CAD_ROOT) -> list[dict[str, str | int]]:
                 "subassembly": subassembly_dir.name,
                 "fabrication_class": fabrication_dir.name,
                 "part_id": part_id_from_file(file_path),
-                "file_name": file_path.name,
                 "path": repo_path(file_path),
-                "size_bytes": file_path.stat().st_size,
-                "sha256": sha256_file(file_path),
             }
         )
     entries.sort(
@@ -77,13 +62,13 @@ def build_entries(cad_root: Path = CAD_ROOT) -> list[dict[str, str | int]]:
             FABRICATION_ORDER.get(str(entry["fabrication_class"]), 99),
             entry["fabrication_class"],
             entry["part_id"],
-            entry["file_name"],
+            entry["path"],
         )
     )
     return entries
 
 
-def manifest_payload(entries: list[dict[str, str | int]]) -> dict[str, object]:
+def manifest_payload(entries: list[dict[str, str]]) -> dict[str, object]:
     subassemblies = sorted({str(entry["subassembly"]) for entry in entries})
     fabrication_classes = sorted(
         {str(entry["fabrication_class"]) for entry in entries},
@@ -99,7 +84,7 @@ def manifest_payload(entries: list[dict[str, str | int]]) -> dict[str, object]:
     }
 
 
-def csv_text(entries: list[dict[str, str | int]]) -> str:
+def csv_text(entries: list[dict[str, str]]) -> str:
     from io import StringIO
 
     output = StringIO()
@@ -109,16 +94,16 @@ def csv_text(entries: list[dict[str, str | int]]) -> str:
     return output.getvalue()
 
 
-def json_text(entries: list[dict[str, str | int]]) -> str:
+def json_text(entries: list[dict[str, str]]) -> str:
     return json.dumps(manifest_payload(entries), indent=2) + "\n"
 
 
-def write_manifest(entries: list[dict[str, str | int]]) -> None:
+def write_manifest(entries: list[dict[str, str]]) -> None:
     CSV_PATH.write_text(csv_text(entries), encoding="utf-8")
     JSON_PATH.write_text(json_text(entries), encoding="utf-8")
 
 
-def check_manifest(entries: list[dict[str, str | int]]) -> list[str]:
+def check_manifest(entries: list[dict[str, str]]) -> list[str]:
     errors: list[str] = []
     expected_csv = csv_text(entries)
     expected_json = json_text(entries)

@@ -71,13 +71,12 @@ Start with the repo-local [fabrication manifest](mechanical/FABRICATION_MANIFEST
 
 ---
 
-## Artifact validation
+## Fabrication manifest
 
-The CAD-derived fabrication manifest and artifact references can be checked locally:
+The CAD-derived fabrication manifest can be checked locally:
 
 ```bash
 python3 scripts/generate_fabrication_manifest.py --check
-python3 scripts/validate_artifact_contract.py
 ```
 
 ---
