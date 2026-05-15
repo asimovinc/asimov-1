@@ -1,5 +1,5 @@
 <mujoco model="Asimov">
-  <compiler angle="radian" meshdir="../assets/meshes"/>
+  <compiler angle="radian" meshdir="../assets/meshes" autolimits="true"/>
 
 <default>
   <!-- REMOVED: frictionloss and damping were adding extra dissipation
@@ -331,6 +331,24 @@
     <exclude body1="left_elbow_link" body2="left_wrist_yaw_link" />
   </contact>
 
+
+  <actuator>
+    <!-- 12 lower-body torque actuators for sim2sim deployment.
+         Names align with the 12 active DOF in asimov_v1_legs.urdf so that
+         data.ctrl[i] maps to dof_names[i] in IsaacGym order. -->
+    <motor name="left_hip_pitch"   joint="left_hip_pitch_joint"   ctrllimited="true" ctrlrange="-200 200"/>
+    <motor name="left_hip_roll"    joint="left_hip_roll_joint"    ctrllimited="true" ctrlrange="-200 200"/>
+    <motor name="left_hip_yaw"     joint="left_hip_yaw_joint"     ctrllimited="true" ctrlrange="-200 200"/>
+    <motor name="left_knee"        joint="left_knee_joint"        ctrllimited="true" ctrlrange="-300 300"/>
+    <motor name="left_ankle_pitch" joint="left_ankle_pitch_joint" ctrllimited="true" ctrlrange="-100 100"/>
+    <motor name="left_ankle_roll"  joint="left_ankle_roll_joint"  ctrllimited="true" ctrlrange="-100 100"/>
+    <motor name="right_hip_pitch"  joint="right_hip_pitch_joint"  ctrllimited="true" ctrlrange="-200 200"/>
+    <motor name="right_hip_roll"   joint="right_hip_roll_joint"   ctrllimited="true" ctrlrange="-200 200"/>
+    <motor name="right_hip_yaw"    joint="right_hip_yaw_joint"    ctrllimited="true" ctrlrange="-200 200"/>
+    <motor name="right_knee"       joint="right_knee_joint"       ctrllimited="true" ctrlrange="-300 300"/>
+    <motor name="right_ankle_pitch" joint="right_ankle_pitch_joint" ctrllimited="true" ctrlrange="-100 100"/>
+    <motor name="right_ankle_roll"  joint="right_ankle_roll_joint" ctrllimited="true" ctrlrange="-100 100"/>
+  </actuator>
 
   <sensor>
     <gyro name="imu_ang_vel" site="imu_in_pelvis"/>

@@ -32,7 +32,8 @@
 
 import math
 import numpy as np
-import mujoco, mujoco_viewer
+import mujoco
+import mujoco.viewer
 from collections import deque
 from scipy.spatial.transform import Rotation as R
 from asimov_rl import LEGGED_GYM_ROOT_DIR
@@ -45,7 +46,7 @@ import os
 import time
 
 x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.0, 0.0, 0.0
-joystick_use = True
+joystick_use = False
 joystick_opened = False
 joystick = None
 
@@ -91,19 +92,24 @@ def get_obs(data,model):
     '''
     q = data.qpos.astype(np.double)
     dq = data.qvel.astype(np.double)
-    quat = data.sensor('body-orientation').data[[1, 2, 3, 0]].astype(np.double)
+    # Asimov MJCF sensor names: imu_quat (w,x,y,z), imu_ang_vel, imu_lin_vel.
+    # scipy expects (x,y,z,w), so reorder [1,2,3,0].
+    quat = data.sensor('imu_quat').data[[1, 2, 3, 0]].astype(np.double)
     r = R.from_quat(quat)
     v = r.apply(data.qvel[:3], inverse=True).astype(np.double)  # In the base frame
-    omega = data.sensor('body-angular-velocity').data.astype(np.double)
+    omega = data.sensor('imu_ang_vel').data.astype(np.double)
     gvec = r.apply(np.array([0., 0., -1.]), inverse=True).astype(np.double)
     foot_positions = []
     foot_forces = []
+    base_pos = None
     for i in range(model.nbody):
         body_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, i)
-        if '5_link' or 'ankle_roll' in body_name:  # according to model name
+        if body_name is None:
+            continue
+        if 'ankle_roll' in body_name:
             foot_positions.append(data.xpos[i][2].copy().astype(np.double))
             foot_forces.append(data.cfrc_ext[i][2].copy().astype(np.double))
-        if 'base_link' or 'waist_link' in body_name:  # according to model name
+        if 'pelvis' in body_name:
             base_pos = data.xpos[i][:3].copy().astype(np.double)
     return (q, dq, quat, v, omega, gvec, base_pos, foot_positions, foot_forces)
 
@@ -137,7 +143,7 @@ def run_mujoco(policy, cfg, env_cfg):
 
 
     mujoco.mj_step(model, data)
-    viewer = mujoco_viewer.MujocoViewer(model, data)
+    viewer = mujoco.viewer.launch_passive(model, data)
     target_q = np.zeros((env_cfg.env.num_actions), dtype=np.double)
     action = np.zeros((env_cfg.env.num_actions), dtype=np.double)
 
@@ -228,7 +234,9 @@ def run_mujoco(policy, cfg, env_cfg):
         applied_tau = data.actuator_force
 
         mujoco.mj_step(model, data)
-        viewer.render()
+        viewer.sync()
+        if not viewer.is_running():
+            break
 
         count_lowlevel += 1
         idx = 5
