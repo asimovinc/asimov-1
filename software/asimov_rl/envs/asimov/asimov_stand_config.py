@@ -107,24 +107,31 @@ class AsimovStandCfg(LeggedRobotCfg):
         # X1 used 0.7 m — Asimov is slightly shorter at the hip.
         pos = [0.0, 0.0, 0.66]
 
-        # Default standing pose: slight hip pitch + knee bend + ankle pitch to
-        # balance moments around the foot. Values scaled from X1 because leg
-        # geometry is similar (~0.6 m total leg length).
-        # NOTE: Asimov knee axis on the right leg points in -Y (per URDF),
-        # so right_knee positive values correspond to flexion in mirror sense.
-        # Sign conventions verified against asimov_v1_legs.urdf joint axes.
+        # Default standing pose: balanced squat with COM over feet.
+        # Asimov's pelvis_link origin sits ~5 cm forward of the actual hip
+        # joints (an artifact of the MJCF convention — see body_mass diagnostic
+        # in tools/test_default_pose.py). Earlier attempts to copy X1's
+        # hip_pitch=+0.4 produced a 27 cm forward COM offset because Asimov's
+        # +Y hip rotation swings the leg backward, not forward.
+        #
+        # Configuration here uses the standard "balanced squat" formula:
+        #   hip_pitch + ankle_pitch ≈ knee/2 (in magnitude), opposite signs
+        # so the shank stays roughly vertical and the foot stays under the hip.
+        # Sign of hip_pitch is negative to push the foot forward (because +Y
+        # rotation here moves the leg backward), and knee positive to bend
+        # toward flexion. Verified with tools/test_default_pose.py.
         default_joint_angles = {
-            'left_hip_pitch_joint':   0.30,
-            'left_hip_roll_joint':    0.03,
+            'left_hip_pitch_joint':   -0.20,
+            'left_hip_roll_joint':    0.0,
             'left_hip_yaw_joint':     0.0,
-            'left_knee_joint':        0.60,
-            'left_ankle_pitch_joint': -0.30,
+            'left_knee_joint':        0.40,
+            'left_ankle_pitch_joint':-0.20,
             'left_ankle_roll_joint':  0.0,
-            'right_hip_pitch_joint':  -0.30,
-            'right_hip_roll_joint':   -0.03,
+            'right_hip_pitch_joint':  0.20,
+            'right_hip_roll_joint':   0.0,
             'right_hip_yaw_joint':    0.0,
-            'right_knee_joint':       -0.60,
-            'right_ankle_pitch_joint':-0.30,
+            'right_knee_joint':      -0.40,
+            'right_ankle_pitch_joint':-0.20,
             'right_ankle_roll_joint': 0.0,
         }
 
@@ -394,7 +401,7 @@ class AsimovStandCfgPPO(LeggedRobotCfgPPO):
         algorithm_class_name = 'DHPPO'
         num_steps_per_env = 24
         max_iterations = 20000
-        save_interval = 1000
+        save_interval = 500
         experiment_name = 'asimov_stand'
         run_name = ''
         resume = False

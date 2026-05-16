@@ -32,8 +32,7 @@
 
 import math
 import numpy as np
-import mujoco
-import mujoco.viewer
+import mujoco, mujoco_viewer
 from collections import deque
 from scipy.spatial.transform import Rotation as R
 from asimov_rl import LEGGED_GYM_ROOT_DIR
@@ -46,7 +45,7 @@ import os
 import time
 
 x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.0, 0.0, 0.0
-joystick_use = False
+joystick_use = True
 joystick_opened = False
 joystick = None
 
@@ -143,7 +142,7 @@ def run_mujoco(policy, cfg, env_cfg):
 
 
     mujoco.mj_step(model, data)
-    viewer = mujoco.viewer.launch_passive(model, data)
+    viewer = mujoco_viewer.MujocoViewer(model, data)
     target_q = np.zeros((env_cfg.env.num_actions), dtype=np.double)
     action = np.zeros((env_cfg.env.num_actions), dtype=np.double)
 
@@ -158,6 +157,24 @@ def run_mujoco(policy, cfg, env_cfg):
 
     np.set_printoptions(formatter={'float': '{:0.4f}'.format})
 
+    def reset_robot():
+        """Reset robot pose, history buffer, and step counter."""
+        # qpos[0:3] = xyz, [3:7] = quat (w,x,y,z), [7:] = joint angles
+        data.qpos[:] = 0
+        data.qpos[2] = env_cfg.init_state.pos[2]   # standing height
+        data.qpos[3] = 1.0                          # unit quat (w=1)
+        data.qpos[-num_actuated_joints:] = cfg.robot_config.default_dof_pos
+        data.qvel[:] = 0
+        data.ctrl[:] = 0
+        mujoco.mj_forward(model, data)
+        # Clear observation history so policy doesn't see pre-reset state
+        for i in range(env_cfg.env.frame_stack):
+            hist_obs[i] = np.zeros([1, env_cfg.env.num_single_obs], dtype=np.double)
+        print(">>> Robot reset")
+
+    # Track last button state for edge detection (so holding doesn't spam resets)
+    last_reset_button = 0
+
     for _ in range(int(cfg.sim_config.sim_duration / cfg.sim_config.dt)):
         # Handle joystick input in main thread (required for macOS)
         global x_vel_cmd, y_vel_cmd, yaw_vel_cmd
@@ -166,6 +183,14 @@ def run_mujoco(policy, cfg, env_cfg):
             x_vel_cmd = -joystick.get_axis(1) * 1
             y_vel_cmd = -joystick.get_axis(0) * 1
             yaw_vel_cmd = -joystick.get_axis(2) * 1
+            # Reset on button 0 (A on Xbox, X on PS) — edge-triggered
+            try:
+                reset_button = joystick.get_button(0)
+            except Exception:
+                reset_button = 0
+            if reset_button and not last_reset_button:
+                reset_robot()
+            last_reset_button = reset_button
 
         # Obtain an observation
         q, dq, quat, v, omega, gvec, base_pos, foot_positions, foot_forces = get_obs(data,model)
@@ -234,9 +259,7 @@ def run_mujoco(policy, cfg, env_cfg):
         applied_tau = data.actuator_force
 
         mujoco.mj_step(model, data)
-        viewer.sync()
-        if not viewer.is_running():
-            break
+        viewer.render()
 
         count_lowlevel += 1
         idx = 5
