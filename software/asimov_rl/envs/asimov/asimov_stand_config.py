@@ -313,13 +313,23 @@ class AsimovStandCfg(LeggedRobotCfg):
         foot_min_dist = 0.15         # Asimov hip width ~0.135 m (vs X1 0.2)
         foot_max_dist = 1.0
 
-        # final_swing_joint_pos = final_swing_joint_delta_pos + default_pos.
-        # Order matches dof_names order (alphabetical by joint name in IsaacGym):
-        # right ankle/hip/knee then left — but env code indexes by dof_names,
-        # so the values here pair with whatever order IsaacGym returns. The
-        # X1 values are a reasonable starting point; refine after first run.
-        final_swing_joint_delta_pos = [0.25, 0.05, -0.11, 0.35, -0.16, 0.0,
-                                       -0.25, -0.05, 0.11, 0.35, -0.16, 0.0]
+        # Swing-leg reference offsets (added to default_dof_pos during swing).
+        # Asimov has LEFT/RIGHT mirrored joint axes (hip_pitch, knee,
+        # ankle_pitch), unlike X1 where left and right share the same axis
+        # sign. The original X1 values pushed both knees in the +q direction
+        # for flexion, but Asimov's right knee flexes in the -q direction
+        # (range [-1.5, 0]), so the X1 numbers drove the right knee command
+        # against its limit — confirmed in sim2sim where right knee q stuck
+        # at 0 with tau saturated.
+        #
+        # Order: [left:  hip_pitch, hip_roll, hip_yaw, knee, ankle_pitch, ankle_roll,
+        #         right: hip_pitch, hip_roll, hip_yaw, knee, ankle_pitch, ankle_roll]
+        # Magnitudes reduced from X1's 0.35 (knee) to 0.20, matching the smaller
+        # default knee bend Asimov uses (0.40 vs X1's 0.49).
+        final_swing_joint_delta_pos = [
+            -0.10,  0.05, 0.0,  0.20, -0.10, 0.0,   # left  (forward swing)
+            +0.10, -0.05, 0.0, -0.20, +0.10, 0.0,   # right (mirrored axes)
+        ]
         target_feet_height = 0.03
         target_feet_height_max = 0.06
         feet_to_ankle_distance = 0.041
