@@ -339,26 +339,19 @@ class AsimovStandCfg(LeggedRobotCfg):
         max_contact_force = 700
 
         class scales:
-            # v3 trained to reward 51 but the robot just shuffled in place
-            # without taking real steps. Diagnosis: feet_contact_number (2.0)
-            # and ref_joint_pos (2.2) together dominate the reward (~4.2),
-            # both of which can be earned by a static gait phase rhythm with
-            # no actual ground push. Boost tracking_lin_vel and feet_air_time;
-            # halve the two "fake gait" rewards. Goal: policy must produce
-            # real displacement to keep climbing reward.
-            ref_joint_pos = 1.0          # v3: 2.2 -> reduce to free policy from rigid ref
+            ref_joint_pos = 2.2
             feet_clearance = 1.
-            feet_contact_number = 1.0    # v3: 2.0 -> reduce to discourage in-place shuffling
-            feet_air_time = 3.0          # v3: 1.2 -> boost to reward longer strides
+            feet_contact_number = 2.0
+            feet_air_time = 1.2
             foot_slip = -0.1
             feet_distance = 0.2
             knee_distance = 0.2
             feet_contact_forces = -0.01
-            tracking_lin_vel = 5.0       # v3: 1.8 -> boost: real velocity tracking is now the dominant signal
-            tracking_ang_vel = 2.0       # v3: 1.1 -> boost similarly
+            tracking_lin_vel = 1.8
+            tracking_ang_vel = 1.1
             vel_mismatch_exp = 0.5
             low_speed = 0.2
-            track_vel_hard = 1.0         # v3: 0.5 -> boost the strict velocity tracking term too
+            track_vel_hard = 0.5
             default_joint_pos = 1.0
             orientation = 1.
             feet_rotation = 0.3
