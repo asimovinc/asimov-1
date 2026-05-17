@@ -122,22 +122,15 @@ class AsimovStandCfg(LeggedRobotCfg):
         # toward flexion. Verified with tools/test_default_pose.py.
         default_joint_angles = {
             'left_hip_pitch_joint':   -0.20,
-            'left_hip_roll_joint':    0.0,
+            'left_hip_roll_joint':    0.10,    # was 0.0; widens stance for lateral stability
             'left_hip_yaw_joint':     0.0,
             'left_knee_joint':        0.40,
             'left_ankle_pitch_joint':-0.20,
             'left_ankle_roll_joint':  0.0,
             'right_hip_pitch_joint':  0.20,
-            'right_hip_roll_joint':   0.0,
+            'right_hip_roll_joint':  -0.10,    # was 0.0; mirror of left to widen stance
             'right_hip_yaw_joint':    0.0,
             'right_knee_joint':      -0.40,
-            # NOTE on sign: right_ankle_pitch axis is (0,-1,0), mirror of left's
-            # (0,+1,0). To produce the same physical foot orientation as the
-            # left side (toe slightly up by ~12°), the default must be the
-            # MIRROR sign of left's. Setting both to -0.20 (as I originally did)
-            # made the right foot toe-DOWN by 23° — confirmed by direct
-            # MuJoCo test on default pose. Same applies to swing delta
-            # (already +0.10, mirror of left's -0.10).
             'right_ankle_pitch_joint': 0.20,
             'right_ankle_roll_joint': 0.0,
         }
@@ -145,24 +138,28 @@ class AsimovStandCfg(LeggedRobotCfg):
     class control(LeggedRobotCfg.control):
         control_type = 'P'
 
-        # PD gains keyed by joint-name substring. Values copied from X1 as a
-        # starting point — Asimov motor specs not yet available. Will retune
-        # in Phase 0.4 once actuator data is in hand.
+        # PD gains.
+        # Note: hip_pitch was kp=30 (X1 baseline) but test_lift_foot.py showed
+        # hip_pitch could not pull the leg into a -0.6 target — only reached
+        # -0.31 (50% tracking error). The required torque to lift a 6.4 kg leg
+        # with COM at 0.25m is ~16 N·m; kp=30 with realistic error of 0.2 only
+        # provides 6 N·m. Doubled to kp=60 so hip_pitch can actually pull the
+        # leg forward against gravity.
         stiffness = {
-            'hip_pitch_joint':   30,
-            'hip_roll_joint':    40,
+            'hip_pitch_joint':   100,    # X1: 30 -> 100 (3.3x): test_lift_foot showed kp=30 only achieved 50% target tracking
+            'hip_roll_joint':    40,     # X1: 40 (kept) — too high kp makes lateral lean unstable
             'hip_yaw_joint':     35,
-            'knee_joint':        100,
-            'ankle_pitch_joint': 35,
-            'ankle_roll_joint':  35,
+            'knee_joint':        200,    # X1: 100 -> 200 (2x): need to support full body weight during single-foot phase
+            'ankle_pitch_joint': 50,     # X1: 35 -> 50: ankle strategy stability
+            'ankle_roll_joint':  40,     # X1: 35 -> 40: foot-roll stability during single-foot
         }
         damping = {
-            'hip_pitch_joint':   3,
-            'hip_roll_joint':    3.0,
+            'hip_pitch_joint':   8,      # scale with kp
+            'hip_roll_joint':    3.0,    # X1 baseline
             'hip_yaw_joint':     4,
-            'knee_joint':        10,
-            'ankle_pitch_joint': 0.5,
-            'ankle_roll_joint':  0.5,
+            'knee_joint':        15,
+            'ankle_pitch_joint': 1.0,
+            'ankle_roll_joint':  3.0,
         }
 
         action_scale = 0.5
