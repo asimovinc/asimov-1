@@ -376,6 +376,13 @@ class AsimovStandCfg(LeggedRobotCfg):
             dof_vel_limits = -1
             dof_pos_limits = -10.
             dof_torque_limits = -0.1
+            # v11: dense reward for foot lift during walking commands. Required
+            # because feet_air_time (sparse, only on landing) and feet_clearance
+            # (gated by gait swing_mask, only rewards "correct" foot at
+            # "correct" phase) are not strong enough exploration signals — v3
+            # through v10 all converged to the "perfect gait phase rhythm
+            # without actually lifting" local optimum.
+            feet_height_walking = 10.0
 
     class normalization:
         class obs_scales:
