@@ -357,12 +357,12 @@ class AsimovStandCfg(LeggedRobotCfg):
             feet_distance = 0.2
             knee_distance = 0.2
             feet_contact_forces = -0.01
-            tracking_lin_vel = 1.8
-            tracking_ang_vel = 1.1
+            tracking_lin_vel = 5.0        # v11: 1.8 → 5.0 (vx tracking must dominate so policy commits to hip swing)
+            tracking_ang_vel = 2.5        # v11: 1.1 → 2.5 (matched scale boost for symmetry)
             vel_mismatch_exp = 0.5
             low_speed = 0.2
-            track_vel_hard = 0.5
-            default_joint_pos = 1.0
+            track_vel_hard = 1.5          # v11: 0.5 → 1.5 (strict velocity error hurts more)
+            default_joint_pos = 1.0       # now gated to stand_command only (see env)
             orientation = 1.
             feet_rotation = 0.3
             base_height = 0.2
@@ -379,10 +379,12 @@ class AsimovStandCfg(LeggedRobotCfg):
             # v11: dense reward for foot lift during walking commands. Required
             # because feet_air_time (sparse, only on landing) and feet_clearance
             # (gated by gait swing_mask, only rewards "correct" foot at
-            # "correct" phase) are not strong enough exploration signals — v3
-            # through v10 all converged to the "perfect gait phase rhythm
-            # without actually lifting" local optimum.
-            feet_height_walking = 10.0
+            # "correct" phase) are not strong enough exploration signals.
+            # v12: scale 10 → 3. At 10 the policy gamed it by lifting feet
+            # high without forward motion (sim2sim showed feet up but base
+            # drifting backward). At 3 it still guides exploration but no
+            # longer dominates tracking_lin_vel (5.0).
+            feet_height_walking = 3.0
 
     class normalization:
         class obs_scales:

@@ -668,15 +668,21 @@ class AsimovStandEnv(LeggedRobot):
 
     def _reward_default_joint_pos(self):
         """
-        Calculates the reward for keeping joint positions close to default positions, with a focus
-        on penalizing deviation in yaw and roll directions. Excludes yaw and roll from the main penalty.
+        Reward keeping joint positions close to default — but ONLY when commanded
+        to stand. v11 sim2sim diagnosis showed: when given a walk command, the
+        policy reduces hip_pitch motion FROM ±0.15 rad (standing) TO ±0.05 rad
+        (walking) because the global -0.01*norm(joint_diff) penalty made it
+        cheaper to stay near default than to swing legs. By gating to stand
+        only, walking is no longer penalized for joint deviation.
         """
         joint_diff = self.dof_pos - self.default_joint_pd_target
         left_yaw_roll = joint_diff[:, [1,2,5]]
         right_yaw_roll = joint_diff[:, [7,8,11]]
         yaw_roll = torch.norm(left_yaw_roll, dim=1) + torch.norm(right_yaw_roll, dim=1)
         yaw_roll = torch.clamp(yaw_roll - 0.1, 0, 50)
-        return torch.exp(-yaw_roll * 100) - 0.01 * torch.norm(joint_diff, dim=1)
+        r = torch.exp(-yaw_roll * 100) - 0.01 * torch.norm(joint_diff, dim=1)
+        stand_command = (torch.norm(self.commands[:, :3], dim=1) <= self.cfg.commands.stand_com_threshold)
+        return torch.where(stand_command, r, torch.zeros_like(r))
 
     def _reward_base_height(self):
         """
