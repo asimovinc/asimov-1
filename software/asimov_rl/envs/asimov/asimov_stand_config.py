@@ -339,10 +339,19 @@ class AsimovStandCfg(LeggedRobotCfg):
         max_contact_force = 700
 
         class scales:
+            # v3/v3_continue trained to reward 63 but the robot never lifted
+            # its feet (rew_feet_air_time = 0.004, rew_feet_clearance = 0.002).
+            # Diagnosis: feet_contact_number rewards 1.0 every step for matching
+            # gait phase (achievable without lifting), while feet_air_time only
+            # fires on real ground impact after a lift. Math: contact_number
+            # (scale 2.0 * value 1.0) = 2.0 per step constantly, vs air_time
+            # (scale 1.2 * ~0.5) ≈ 0.5 occasionally and with fall risk. The
+            # policy correctly inferred not lifting is optimal.
+            # v5: make lifting feet mandatory by inverting the ratio.
             ref_joint_pos = 2.2
-            feet_clearance = 1.
-            feet_contact_number = 2.0
-            feet_air_time = 1.2
+            feet_clearance = 5.0          # v3: 1.0  -> 5x: must reach 3-6cm
+            feet_contact_number = 0.5     # v3: 2.0  -> 1/4: no longer dominates
+            feet_air_time = 8.0           # v3: 1.2  -> 6.7x: stride is now the biggest single reward
             foot_slip = -0.1
             feet_distance = 0.2
             knee_distance = 0.2
