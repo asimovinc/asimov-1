@@ -131,7 +131,14 @@ class AsimovStandCfg(LeggedRobotCfg):
             'right_hip_roll_joint':   0.0,
             'right_hip_yaw_joint':    0.0,
             'right_knee_joint':      -0.40,
-            'right_ankle_pitch_joint':-0.20,
+            # NOTE on sign: right_ankle_pitch axis is (0,-1,0), mirror of left's
+            # (0,+1,0). To produce the same physical foot orientation as the
+            # left side (toe slightly up by ~12°), the default must be the
+            # MIRROR sign of left's. Setting both to -0.20 (as I originally did)
+            # made the right foot toe-DOWN by 23° — confirmed by direct
+            # MuJoCo test on default pose. Same applies to swing delta
+            # (already +0.10, mirror of left's -0.10).
+            'right_ankle_pitch_joint': 0.20,
             'right_ankle_roll_joint': 0.0,
         }
 
