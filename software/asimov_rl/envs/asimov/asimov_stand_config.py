@@ -424,7 +424,7 @@ class AsimovStandCfgPPO(LeggedRobotCfgPPO):
         algorithm_class_name = 'DHPPO'
         num_steps_per_env = 24
         max_iterations = 20000
-        save_interval = 500
+        save_interval = 100
         experiment_name = 'asimov_stand'
         run_name = ''
         resume = False
