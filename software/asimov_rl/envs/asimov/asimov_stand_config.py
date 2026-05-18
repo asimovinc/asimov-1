@@ -121,17 +121,24 @@ class AsimovStandCfg(LeggedRobotCfg):
         # rotation here moves the leg backward), and knee positive to bend
         # toward flexion. Verified with tools/test_default_pose.py.
         default_joint_angles = {
-            'left_hip_pitch_joint':   -0.20,
-            'left_hip_roll_joint':    0.10,    # was 0.0; widens stance for lateral stability
+            # COM-centering fix: previous pose (hip_pitch ±0.20) put COM at 28%
+            # from heel — leaving only 6.2cm back-margin vs 15.6cm front-margin
+            # (foot length 21.8cm including toe). Any forward swing during
+            # walking pushed COM past the heel → backward tipping (仰天摔倒).
+            # Reduced hip_pitch magnitude from 0.20 to 0.10 to lean torso
+            # slightly forward, recentering COM at 50% of foot support polygon.
+            # Verified: front-margin 10.9cm, back-margin 10.7cm (balanced).
+            'left_hip_pitch_joint':   -0.10,    # was -0.20
+            'left_hip_roll_joint':    0.10,
             'left_hip_yaw_joint':     0.0,
             'left_knee_joint':        0.40,
-            'left_ankle_pitch_joint':-0.20,
+            'left_ankle_pitch_joint':-0.10,     # was -0.20, lighter dorsiflex
             'left_ankle_roll_joint':  0.0,
-            'right_hip_pitch_joint':  0.20,
-            'right_hip_roll_joint':  -0.10,    # was 0.0; mirror of left to widen stance
+            'right_hip_pitch_joint':  0.10,     # was +0.20 (mirror)
+            'right_hip_roll_joint':  -0.10,
             'right_hip_yaw_joint':    0.0,
             'right_knee_joint':      -0.40,
-            'right_ankle_pitch_joint': 0.20,
+            'right_ankle_pitch_joint': 0.10,    # was +0.20 (mirror)
             'right_ankle_roll_joint': 0.0,
         }
 
@@ -357,12 +364,12 @@ class AsimovStandCfg(LeggedRobotCfg):
             feet_distance = 0.2
             knee_distance = 0.2
             feet_contact_forces = -0.01
-            tracking_lin_vel = 5.0        # v11: 1.8 → 5.0 (vx tracking must dominate so policy commits to hip swing)
-            tracking_ang_vel = 2.5        # v11: 1.1 → 2.5 (matched scale boost for symmetry)
+            tracking_lin_vel = 1.8        # v12 boosted to 5.0 but plateaued — reverted to v11 baseline
+            tracking_ang_vel = 1.1        # v12: 2.5, reverted
             vel_mismatch_exp = 0.5
             low_speed = 0.2
-            track_vel_hard = 1.5          # v11: 0.5 → 1.5 (strict velocity error hurts more)
-            default_joint_pos = 1.0       # now gated to stand_command only (see env)
+            track_vel_hard = 0.5          # v12: 1.5, reverted
+            default_joint_pos = 1.0       # v12 gated to stand-only, reverted — this regularizer was needed
             orientation = 1.
             feet_rotation = 0.3
             base_height = 0.2
@@ -376,15 +383,13 @@ class AsimovStandCfg(LeggedRobotCfg):
             dof_vel_limits = -1
             dof_pos_limits = -10.
             dof_torque_limits = -0.1
-            # v11: dense reward for foot lift during walking commands. Required
+            # Dense reward for foot lift during walking commands. Required
             # because feet_air_time (sparse, only on landing) and feet_clearance
-            # (gated by gait swing_mask, only rewards "correct" foot at
-            # "correct" phase) are not strong enough exploration signals.
-            # v12: scale 10 → 3. At 10 the policy gamed it by lifting feet
-            # high without forward motion (sim2sim showed feet up but base
-            # drifting backward). At 3 it still guides exploration but no
-            # longer dominates tracking_lin_vel (5.0).
-            feet_height_walking = 3.0
+            # (gated by gait swing_mask) are too weak as exploration signals.
+            # v11 used 10.0 and successfully escaped the "fake gait" attractor.
+            # v12 dropped to 3.0; combined with other changes, training plateaued
+            # worse than v11. Reverted to 10.0.
+            feet_height_walking = 10.0
 
     class normalization:
         class obs_scales:
