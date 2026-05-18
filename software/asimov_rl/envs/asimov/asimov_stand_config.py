@@ -128,17 +128,17 @@ class AsimovStandCfg(LeggedRobotCfg):
             # Reduced hip_pitch magnitude from 0.20 to 0.10 to lean torso
             # slightly forward, recentering COM at 50% of foot support polygon.
             # Verified: front-margin 10.9cm, back-margin 10.7cm (balanced).
-            'left_hip_pitch_joint':   -0.10,    # was -0.20
+            'left_hip_pitch_joint':   -0.20,    # was -0.10 — sweep_default_pose: ±0.20 puts COM 1.6cm fwd of ankle mid (±0.10 was 6.1cm)
             'left_hip_roll_joint':    0.10,
             'left_hip_yaw_joint':     0.0,
             'left_knee_joint':        0.40,
-            'left_ankle_pitch_joint':-0.10,     # was -0.20, lighter dorsiflex
+            'left_ankle_pitch_joint':-0.20,     # match hip to keep shank vertical
             'left_ankle_roll_joint':  0.0,
-            'right_hip_pitch_joint':  0.10,     # was +0.20 (mirror)
+            'right_hip_pitch_joint':  0.20,     # mirror
             'right_hip_roll_joint':  -0.10,
             'right_hip_yaw_joint':    0.0,
             'right_knee_joint':      -0.40,
-            'right_ankle_pitch_joint': 0.10,    # was +0.20 (mirror)
+            'right_ankle_pitch_joint': 0.20,    # mirror
             'right_ankle_roll_joint': 0.0,
         }
 
