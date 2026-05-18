@@ -1,0 +1,1042 @@
+{
+  "schema_version": 1,
+  "source_root": "mechanical/ASV1",
+  "entry_count": 170,
+  "subassemblies": [
+    "100",
+    "200",
+    "300",
+    "400",
+    "500",
+    "600",
+    "700"
+  ],
+  "fabrication_classes": [
+    "ALU_7075",
+    "SML_316L",
+    "MJF_PA12",
+    "OFF_THE_SHELF"
+  ],
+  "entries": [
+    {
+      "subassembly": "100",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_100_02A",
+      "path": "mechanical/ASV1/100/FABRICATION/ALU_7075/ASV1_100_02A.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_100_03A",
+      "path": "mechanical/ASV1/100/FABRICATION/ALU_7075/ASV1_100_03A.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_100_01C",
+      "path": "mechanical/ASV1/100/FABRICATION/MJF_PA12/ASV1_100_01C.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_100_04C",
+      "path": "mechanical/ASV1/100/FABRICATION/MJF_PA12/ASV1_100_04C.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_100_05C",
+      "path": "mechanical/ASV1/100/FABRICATION/MJF_PA12/ASV1_100_05C.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_100_06C",
+      "path": "mechanical/ASV1/100/FABRICATION/MJF_PA12/ASV1_100_06C.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_100_10C",
+      "path": "mechanical/ASV1/100/FABRICATION/MJF_PA12/ASV1_100_10C.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_100_12C",
+      "path": "mechanical/ASV1/100/FABRICATION/MJF_PA12/ASV1_100_12C.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_100_07X",
+      "path": "mechanical/ASV1/100/FABRICATION/OFF_THE_SHELF/ASV1_100_07X.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_100_08X",
+      "path": "mechanical/ASV1/100/FABRICATION/OFF_THE_SHELF/ASV1_100_08X.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_100_09X",
+      "path": "mechanical/ASV1/100/FABRICATION/OFF_THE_SHELF/ASV1_100_09X.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_100_11X",
+      "path": "mechanical/ASV1/100/FABRICATION/OFF_THE_SHELF/ASV1_100_11X.STEP"
+    },
+    {
+      "subassembly": "100",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_100_13X",
+      "path": "mechanical/ASV1/100/FABRICATION/OFF_THE_SHELF/ASV1_100_13X.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_200_02A",
+      "path": "mechanical/ASV1/200/FABRICATION/ALU_7075/ASV1_200_02A.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_200_03A",
+      "path": "mechanical/ASV1/200/FABRICATION/ALU_7075/ASV1_200_03A.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_200_16A",
+      "path": "mechanical/ASV1/200/FABRICATION/ALU_7075/ASV1_200_16A.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_200_04B",
+      "path": "mechanical/ASV1/200/FABRICATION/SML_316L/ASV1_200_04B.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_200_05B",
+      "path": "mechanical/ASV1/200/FABRICATION/SML_316L/ASV1_200_05B.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_200_01C",
+      "path": "mechanical/ASV1/200/FABRICATION/MJF_PA12/ASV1_200_01C.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_200_06C",
+      "path": "mechanical/ASV1/200/FABRICATION/MJF_PA12/ASV1_200_06C.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_200_07C",
+      "path": "mechanical/ASV1/200/FABRICATION/MJF_PA12/ASV1_200_07C.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_200_08C",
+      "path": "mechanical/ASV1/200/FABRICATION/MJF_PA12/ASV1_200_08C.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_200_09C",
+      "path": "mechanical/ASV1/200/FABRICATION/MJF_PA12/ASV1_200_09C.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_200_15C",
+      "path": "mechanical/ASV1/200/FABRICATION/MJF_PA12/ASV1_200_15C.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_200_10X",
+      "path": "mechanical/ASV1/200/FABRICATION/OFF_THE_SHELF/ASV1_200_10X.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_200_11X",
+      "path": "mechanical/ASV1/200/FABRICATION/OFF_THE_SHELF/ASV1_200_11X.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_200_12X",
+      "path": "mechanical/ASV1/200/FABRICATION/OFF_THE_SHELF/ASV1_200_12X.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_200_13X",
+      "path": "mechanical/ASV1/200/FABRICATION/OFF_THE_SHELF/ASV1_200_13X.STEP"
+    },
+    {
+      "subassembly": "200",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_200_14X",
+      "path": "mechanical/ASV1/200/FABRICATION/OFF_THE_SHELF/ASV1_200_14X.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_300_01A",
+      "path": "mechanical/ASV1/300/FABRICATION/ALU_7075/ASV1_300_01A.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_300_03A",
+      "path": "mechanical/ASV1/300/FABRICATION/ALU_7075/ASV1_300_03A.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_300_05A",
+      "path": "mechanical/ASV1/300/FABRICATION/ALU_7075/ASV1_300_05A.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_300_07A",
+      "path": "mechanical/ASV1/300/FABRICATION/ALU_7075/ASV1_300_07A.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_300_08A",
+      "path": "mechanical/ASV1/300/FABRICATION/ALU_7075/ASV1_300_08A.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_300_09A",
+      "path": "mechanical/ASV1/300/FABRICATION/ALU_7075/ASV1_300_09A.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_300_10A",
+      "path": "mechanical/ASV1/300/FABRICATION/ALU_7075/ASV1_300_10A.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_300_11A",
+      "path": "mechanical/ASV1/300/FABRICATION/ALU_7075/ASV1_300_11A.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_300_02B",
+      "path": "mechanical/ASV1/300/FABRICATION/SML_316L/ASV1_300_02B.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_300_04B",
+      "path": "mechanical/ASV1/300/FABRICATION/SML_316L/ASV1_300_04B.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_300_06B",
+      "path": "mechanical/ASV1/300/FABRICATION/SML_316L/ASV1_300_06B.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_300_12B",
+      "path": "mechanical/ASV1/300/FABRICATION/SML_316L/ASV1_300_12B.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_300_13C",
+      "path": "mechanical/ASV1/300/FABRICATION/MJF_PA12/ASV1_300_13C.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_300_14C",
+      "path": "mechanical/ASV1/300/FABRICATION/MJF_PA12/ASV1_300_14C.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_300_15C",
+      "path": "mechanical/ASV1/300/FABRICATION/MJF_PA12/ASV1_300_15C.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_300_16C",
+      "path": "mechanical/ASV1/300/FABRICATION/MJF_PA12/ASV1_300_16C.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_300_17X",
+      "path": "mechanical/ASV1/300/FABRICATION/OFF_THE_SHELF/ASV1_300_17X.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_300_18X",
+      "path": "mechanical/ASV1/300/FABRICATION/OFF_THE_SHELF/ASV1_300_18X.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_300_19X",
+      "path": "mechanical/ASV1/300/FABRICATION/OFF_THE_SHELF/ASV1_300_19X.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_300_20X",
+      "path": "mechanical/ASV1/300/FABRICATION/OFF_THE_SHELF/ASV1_300_20X.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_300_21X",
+      "path": "mechanical/ASV1/300/FABRICATION/OFF_THE_SHELF/ASV1_300_21X.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_300_22X",
+      "path": "mechanical/ASV1/300/FABRICATION/OFF_THE_SHELF/ASV1_300_22X.STEP"
+    },
+    {
+      "subassembly": "300",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_300_23X",
+      "path": "mechanical/ASV1/300/FABRICATION/OFF_THE_SHELF/ASV1_300_23X.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_400_04A",
+      "path": "mechanical/ASV1/400/FABRICATION/ALU_7075/ASV1_400_04A.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_400_05A",
+      "path": "mechanical/ASV1/400/FABRICATION/ALU_7075/ASV1_400_05A.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_400_11A",
+      "path": "mechanical/ASV1/400/FABRICATION/ALU_7075/ASV1_400_11A.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_400_13A",
+      "path": "mechanical/ASV1/400/FABRICATION/ALU_7075/ASV1_400_13A.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_400_14A",
+      "path": "mechanical/ASV1/400/FABRICATION/ALU_7075/ASV1_400_14A.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_400_17A",
+      "path": "mechanical/ASV1/400/FABRICATION/ALU_7075/ASV1_400_17A.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_400_18A",
+      "path": "mechanical/ASV1/400/FABRICATION/ALU_7075/ASV1_400_18A.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_400_19A",
+      "path": "mechanical/ASV1/400/FABRICATION/ALU_7075/ASV1_400_19A.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_400_02B",
+      "path": "mechanical/ASV1/400/FABRICATION/SML_316L/ASV1_400_02B.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_400_03B",
+      "path": "mechanical/ASV1/400/FABRICATION/SML_316L/ASV1_400_03B.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_400_12B",
+      "path": "mechanical/ASV1/400/FABRICATION/SML_316L/ASV1_400_12B.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_400_20B",
+      "path": "mechanical/ASV1/400/FABRICATION/SML_316L/ASV1_400_20B.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_400_06C",
+      "path": "mechanical/ASV1/400/FABRICATION/MJF_PA12/ASV1_400_06C.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_400_07C",
+      "path": "mechanical/ASV1/400/FABRICATION/MJF_PA12/ASV1_400_07C.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_400_15C",
+      "path": "mechanical/ASV1/400/FABRICATION/MJF_PA12/ASV1_400_15C.step"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_400_16C",
+      "path": "mechanical/ASV1/400/FABRICATION/MJF_PA12/ASV1_400_16C.step"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_400_01X",
+      "path": "mechanical/ASV1/400/FABRICATION/OFF_THE_SHELF/ASV1_400_01X.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_400_08X",
+      "path": "mechanical/ASV1/400/FABRICATION/OFF_THE_SHELF/ASV1_400_08X.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_400_09X",
+      "path": "mechanical/ASV1/400/FABRICATION/OFF_THE_SHELF/ASV1_400_09X.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_400_10X",
+      "path": "mechanical/ASV1/400/FABRICATION/OFF_THE_SHELF/ASV1_400_10X.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_400_21X",
+      "path": "mechanical/ASV1/400/FABRICATION/OFF_THE_SHELF/ASV1_400_21X.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_400_22X",
+      "path": "mechanical/ASV1/400/FABRICATION/OFF_THE_SHELF/ASV1_400_22X.STEP"
+    },
+    {
+      "subassembly": "400",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_400_23X",
+      "path": "mechanical/ASV1/400/FABRICATION/OFF_THE_SHELF/ASV1_400_23X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_500_05A",
+      "path": "mechanical/ASV1/500/FABRICATION/ALU_7075/ASV1_500_05A.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_500_06A",
+      "path": "mechanical/ASV1/500/FABRICATION/ALU_7075/ASV1_500_06A.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_500_08A",
+      "path": "mechanical/ASV1/500/FABRICATION/ALU_7075/ASV1_500_08A.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_500_09A",
+      "path": "mechanical/ASV1/500/FABRICATION/ALU_7075/ASV1_500_09A.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_500_12A",
+      "path": "mechanical/ASV1/500/FABRICATION/ALU_7075/ASV1_500_12A.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_500_23A_SS",
+      "path": "mechanical/ASV1/500/FABRICATION/ALU_7075/ASV1_500_23A_SS.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_500_24A_SS",
+      "path": "mechanical/ASV1/500/FABRICATION/ALU_7075/ASV1_500_24A_SS.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_500_25A",
+      "path": "mechanical/ASV1/500/FABRICATION/ALU_7075/ASV1_500_25A.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_500_36A",
+      "path": "mechanical/ASV1/500/FABRICATION/ALU_7075/ASV1_500_36A.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_500_01B",
+      "path": "mechanical/ASV1/500/FABRICATION/SML_316L/ASV1_500_01B.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_500_17B",
+      "path": "mechanical/ASV1/500/FABRICATION/SML_316L/ASV1_500_17B.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_500_18B",
+      "path": "mechanical/ASV1/500/FABRICATION/SML_316L/ASV1_500_18B.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_500_26B",
+      "path": "mechanical/ASV1/500/FABRICATION/SML_316L/ASV1_500_26B.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_500_03C",
+      "path": "mechanical/ASV1/500/FABRICATION/MJF_PA12/ASV1_500_03C.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_500_04C",
+      "path": "mechanical/ASV1/500/FABRICATION/MJF_PA12/ASV1_500_04C.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_500_10C",
+      "path": "mechanical/ASV1/500/FABRICATION/MJF_PA12/ASV1_500_10C.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_500_13C",
+      "path": "mechanical/ASV1/500/FABRICATION/MJF_PA12/ASV1_500_13C.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_500_14C",
+      "path": "mechanical/ASV1/500/FABRICATION/MJF_PA12/ASV1_500_14C.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_500_37C",
+      "path": "mechanical/ASV1/500/FABRICATION/MJF_PA12/ASV1_500_37C.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_500_38C",
+      "path": "mechanical/ASV1/500/FABRICATION/MJF_PA12/ASV1_500_38C.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_500_39C",
+      "path": "mechanical/ASV1/500/FABRICATION/MJF_PA12/ASV1_500_39C.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_500_40C",
+      "path": "mechanical/ASV1/500/FABRICATION/MJF_PA12/ASV1_500_40C.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_02X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_02X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_07X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_07X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_11X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_11X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_15X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_15X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_16X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_16X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_19X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_19X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_20X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_20X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_21X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_21X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_22X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_22X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_27X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_27X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_28X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_28X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_29X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_29X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_30X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_30X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_31X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_31X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_32X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_32X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_33X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_33X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_34X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_34X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_35X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_35X.STEP"
+    },
+    {
+      "subassembly": "500",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_500_41X",
+      "path": "mechanical/ASV1/500/FABRICATION/OFF_THE_SHELF/ASV1_500_41X.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_600_05A",
+      "path": "mechanical/ASV1/600/FABRICATION/ALU_7075/ASV1_600_05A.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_600_06A",
+      "path": "mechanical/ASV1/600/FABRICATION/ALU_7075/ASV1_600_06A.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_600_08A",
+      "path": "mechanical/ASV1/600/FABRICATION/ALU_7075/ASV1_600_08A.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_600_09A",
+      "path": "mechanical/ASV1/600/FABRICATION/ALU_7075/ASV1_600_09A.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_600_12A",
+      "path": "mechanical/ASV1/600/FABRICATION/ALU_7075/ASV1_600_12A.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_600_23A_SS",
+      "path": "mechanical/ASV1/600/FABRICATION/ALU_7075/ASV1_600_23A_SS.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_600_24A_SS",
+      "path": "mechanical/ASV1/600/FABRICATION/ALU_7075/ASV1_600_24A_SS.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_600_25A",
+      "path": "mechanical/ASV1/600/FABRICATION/ALU_7075/ASV1_600_25A.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "ALU_7075",
+      "part_id": "ASV1_600_36A",
+      "path": "mechanical/ASV1/600/FABRICATION/ALU_7075/ASV1_600_36A.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_600_01B",
+      "path": "mechanical/ASV1/600/FABRICATION/SML_316L/ASV1_600_01B.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_600_17B",
+      "path": "mechanical/ASV1/600/FABRICATION/SML_316L/ASV1_600_17B.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_600_18B",
+      "path": "mechanical/ASV1/600/FABRICATION/SML_316L/ASV1_600_18B.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_600_26B",
+      "path": "mechanical/ASV1/600/FABRICATION/SML_316L/ASV1_600_26B.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_600_03C",
+      "path": "mechanical/ASV1/600/FABRICATION/MJF_PA12/ASV1_600_03C.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_600_04C",
+      "path": "mechanical/ASV1/600/FABRICATION/MJF_PA12/ASV1_600_04C.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_600_10C",
+      "path": "mechanical/ASV1/600/FABRICATION/MJF_PA12/ASV1_600_10C.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_600_13C",
+      "path": "mechanical/ASV1/600/FABRICATION/MJF_PA12/ASV1_600_13C.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_600_14C",
+      "path": "mechanical/ASV1/600/FABRICATION/MJF_PA12/ASV1_600_14C.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_600_37C",
+      "path": "mechanical/ASV1/600/FABRICATION/MJF_PA12/ASV1_600_37C.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_600_38C",
+      "path": "mechanical/ASV1/600/FABRICATION/MJF_PA12/ASV1_600_38C.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_600_39C",
+      "path": "mechanical/ASV1/600/FABRICATION/MJF_PA12/ASV1_600_39C.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_600_40C",
+      "path": "mechanical/ASV1/600/FABRICATION/MJF_PA12/ASV1_600_40C.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_02X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_02X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_07X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_07X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_11X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_11X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_15X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_15X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_16X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_16X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_19X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_19X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_20X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_20X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_21X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_21X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_22X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_22X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_27X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_27X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_28X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_28X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_29X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_29X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_30X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_30X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_31X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_31X.step.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_32X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_32X.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_33X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_33X.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_34X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_34X.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_35X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_35X.STEP"
+    },
+    {
+      "subassembly": "600",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_600_41X",
+      "path": "mechanical/ASV1/600/FABRICATION/OFF_THE_SHELF/ASV1_600_41X.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_700_01B",
+      "path": "mechanical/ASV1/700/FABRICATION/SML_316L/ASV1_700_01B.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "SML_316L",
+      "part_id": "ASV1_700_02B",
+      "path": "mechanical/ASV1/700/FABRICATION/SML_316L/ASV1_700_02B.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_700_03C",
+      "path": "mechanical/ASV1/700/FABRICATION/MJF_PA12/ASV1_700_03C.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_700_04C",
+      "path": "mechanical/ASV1/700/FABRICATION/MJF_PA12/ASV1_700_04C.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_700_05C",
+      "path": "mechanical/ASV1/700/FABRICATION/MJF_PA12/ASV1_700_05C.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_700_06C",
+      "path": "mechanical/ASV1/700/FABRICATION/MJF_PA12/ASV1_700_06C.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_700_07C",
+      "path": "mechanical/ASV1/700/FABRICATION/MJF_PA12/ASV1_700_07C.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "MJF_PA12",
+      "part_id": "ASV1_700_11C",
+      "path": "mechanical/ASV1/700/FABRICATION/MJF_PA12/ASV1_700_11C.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_700_08X",
+      "path": "mechanical/ASV1/700/FABRICATION/OFF_THE_SHELF/ASV1_700_08X.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_700_09X",
+      "path": "mechanical/ASV1/700/FABRICATION/OFF_THE_SHELF/ASV1_700_09X.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_700_10X",
+      "path": "mechanical/ASV1/700/FABRICATION/OFF_THE_SHELF/ASV1_700_10X.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_700_12X",
+      "path": "mechanical/ASV1/700/FABRICATION/OFF_THE_SHELF/ASV1_700_12X.STEP"
+    },
+    {
+      "subassembly": "700",
+      "fabrication_class": "OFF_THE_SHELF",
+      "part_id": "ASV1_700_13X",
+      "path": "mechanical/ASV1/700/FABRICATION/OFF_THE_SHELF/ASV1_700_13X.STEP"
+    }
+  ]
+}
