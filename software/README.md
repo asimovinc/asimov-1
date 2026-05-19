@@ -21,7 +21,6 @@ The upstream X1 framework was adapted to Asimov v1. Key changes:
 | Package | `humanoid` → `asimov_rl`, IsaacGym imports fixed | 重命名包，修复 isaacgym/torch 导入顺序 |
 | Config | Default pose rebuilt as balanced squat (COM over feet) | 重建平衡蹲姿，质心落在脚上 |
 | Config | PD gains raised well above X1 baseline (hip_pitch 30→100, knee 100→200) | 显著提高 PD 增益（X1 增益在 Asimov 上拉不动腿） |
-| Reward | Added dense `feet_height_walking` reward | 新增稠密抬脚奖励，引导探索（X1 的稀疏 air_time 无法引导 Asimov 学会迈步） |
 
 Diagnostic tools live in `tools/` (see §6).
 
@@ -100,10 +99,11 @@ Monitor with TensorBoard:
 tensorboard --logdir=logs/asimov_stand --port=6006
 ```
 
-Key reward signals to watch: `rew_feet_height_walking` (should rise — proves
-the policy is lifting feet), `rew_feet_air_time`, `Mean episode length`.
+Key reward signals to watch: `rew_feet_air_time` (should rise — proves the
+policy is lifting feet during walking commands), `rew_tracking_lin_vel`,
+`Mean episode length`.
 
-关注 `rew_feet_height_walking`（上升说明在抬脚）、`rew_feet_air_time`、episode 长度。
+关注 `rew_feet_air_time`（上升说明在迈步）、`rew_tracking_lin_vel`、episode 长度。
 
 ---
 

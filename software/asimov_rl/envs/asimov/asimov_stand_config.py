@@ -335,11 +335,15 @@ class AsimovStandCfg(LeggedRobotCfg):
         #
         # Order: [left:  hip_pitch, hip_roll, hip_yaw, knee, ankle_pitch, ankle_roll,
         #         right: hip_pitch, hip_roll, hip_yaw, knee, ankle_pitch, ankle_roll]
-        # Magnitudes reduced from X1's 0.35 (knee) to 0.20, matching the smaller
-        # default knee bend Asimov uses (0.40 vs X1's 0.49).
+        # Magnitudes restored to X1 baseline (was reduced to 40-57% which made
+        # the reference trajectory an "in-place wiggle" with only ~11° hip swing.
+        # That caused training to converge to "stand and shuffle" — no real step.
+        # X1 hip 0.25 / knee 0.35 / ankle 0.16 produces ~28° hip swing).
+        # Ankle reduced from X1's 0.16 to 0.13 because Asimov's ankle limit
+        # is ±0.35 and default is now ±0.20; 0.13 leaves clearance vs limit.
         final_swing_joint_delta_pos = [
-            -0.10,  0.05, 0.0,  0.20, -0.10, 0.0,   # left  (forward swing)
-            +0.10, -0.05, 0.0, -0.20, +0.10, 0.0,   # right (mirrored axes)
+            -0.25,  0.05, 0.0,  0.35, -0.13, 0.0,   # left  (forward swing)
+            +0.25, -0.05, 0.0, -0.35, +0.13, 0.0,   # right (mirrored axes)
         ]
         target_feet_height = 0.03
         target_feet_height_max = 0.06
@@ -383,13 +387,6 @@ class AsimovStandCfg(LeggedRobotCfg):
             dof_vel_limits = -1
             dof_pos_limits = -10.
             dof_torque_limits = -0.1
-            # Dense reward for foot lift during walking commands. Required
-            # because feet_air_time (sparse, only on landing) and feet_clearance
-            # (gated by gait swing_mask) are too weak as exploration signals.
-            # v11 used 10.0 and successfully escaped the "fake gait" attractor.
-            # v12 dropped to 3.0; combined with other changes, training plateaued
-            # worse than v11. Reverted to 10.0.
-            feet_height_walking = 10.0
 
     class normalization:
         class obs_scales:

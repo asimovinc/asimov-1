@@ -892,23 +892,6 @@ class AsimovStandEnv(LeggedRobot):
                         torch.zeros_like(r))
         return r
 
-    def _reward_feet_height_walking(self):
-        """Dense reward for foot height above ground, gated only by walk command.
-
-        Unlike feet_clearance (which is also gated by gait swing_mask, so the
-        policy only gets reward if it lifts the "correct" foot at the "correct"
-        gait phase), this reward fires whenever EITHER foot is off the ground
-        AND the command is non-zero. It provides a dense exploration signal:
-        any lifting attempt during walking gets reward, regardless of phase.
-
-        Added in v11 because v3-v10 all converged to "fake gait" attractor
-        (gait phase rhythm perfect but feet never leave ground): air_time
-        and clearance are too sparse / phase-conditioned to guide exploration.
-        """
-        feet_z = self.rigid_state[:, self.feet_indices, 2] - self.cfg.rewards.feet_to_ankle_distance
-        walking = (torch.norm(self.commands[:, :3], dim=1) > self.cfg.commands.stand_com_threshold).float()
-        return feet_z.clamp(0, 0.10).sum(dim=1) * walking
-
     def _reward_feet_stumble(self):
         # Penalize feet hitting vertical surfaces
         return torch.any(torch.norm(self.contact_forces[:, self.feet_indices, :2], dim=2) >\
