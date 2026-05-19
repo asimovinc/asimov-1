@@ -145,28 +145,29 @@ class AsimovStandCfg(LeggedRobotCfg):
     class control(LeggedRobotCfg.control):
         control_type = 'P'
 
-        # PD gains.
-        # Note: hip_pitch was kp=30 (X1 baseline) but test_lift_foot.py showed
-        # hip_pitch could not pull the leg into a -0.6 target — only reached
-        # -0.31 (50% tracking error). The required torque to lift a 6.4 kg leg
-        # with COM at 0.25m is ~16 N·m; kp=30 with realistic error of 0.2 only
-        # provides 6 N·m. Doubled to kp=60 so hip_pitch can actually pull the
-        # leg forward against gravity.
+        # PD gains: reverted to X1 baseline. The earlier test_lift_foot diagnosis
+        # ("hip kp=30 only tracks 50% of target") is correct for OPEN-LOOP PD
+        # control on a single commanded motion, but the X1 sim2sim log shows
+        # the trained policy commands targets ~2x beyond the desired joint
+        # position and relies on low PD + inertia to actually swing the leg.
+        # High PD forces the policy to command targets directly (no overshoot
+        # strategy), which appears to make walking harder to learn. Trying X1
+        # gains to see if the policy can find the same lead-control strategy.
         stiffness = {
-            'hip_pitch_joint':   100,    # X1: 30 -> 100 (3.3x): test_lift_foot showed kp=30 only achieved 50% target tracking
-            'hip_roll_joint':    40,     # X1: 40 (kept) — too high kp makes lateral lean unstable
+            'hip_pitch_joint':   30,
+            'hip_roll_joint':    40,
             'hip_yaw_joint':     35,
-            'knee_joint':        200,    # X1: 100 -> 200 (2x): need to support full body weight during single-foot phase
-            'ankle_pitch_joint': 50,     # X1: 35 -> 50: ankle strategy stability
-            'ankle_roll_joint':  40,     # X1: 35 -> 40: foot-roll stability during single-foot
+            'knee_joint':        100,
+            'ankle_pitch_joint': 35,
+            'ankle_roll_joint':  35,
         }
         damping = {
-            'hip_pitch_joint':   8,      # scale with kp
-            'hip_roll_joint':    3.0,    # X1 baseline
+            'hip_pitch_joint':   3,
+            'hip_roll_joint':    3.0,
             'hip_yaw_joint':     4,
-            'knee_joint':        15,
-            'ankle_pitch_joint': 1.0,
-            'ankle_roll_joint':  3.0,
+            'knee_joint':        10,
+            'ankle_pitch_joint': 0.5,
+            'ankle_roll_joint':  0.5,
         }
 
         action_scale = 0.5
