@@ -279,23 +279,35 @@ class AsimovStandEnv(LeggedRobot):
                 self.rand_push_torque.zero_()
 
     def compute_ref_state(self):
+        # Asimov-specific change: hip_pitch reference uses the FULL sin wave so
+        # the stance leg gets a "push back" signal symmetric to the swing leg's
+        # "swing forward" signal. The original X1 logic clamped each leg's sin
+        # to one half cycle (swing only), which works for X1 (hip range ±π,
+        # default ±0.4 — policy has both directions accessible by symmetry).
+        # On Asimov the asymmetric joint range [-2.094, +1.0] PLUS default of
+        # ∓0.20 left the policy with no reference signal to extend the hip
+        # backward during stance, so it learned to shuffle without push-off.
+        # Other joints stay clamped: knee can't bend backward at all (range
+        # [0, 1.5] for left), and hip_yaw/hip_roll/ankle have no benefit from
+        # double-sided motion.
         phase = self._get_phase()
         sin_pos = torch.sin(2 * torch.pi * phase)
         sin_pos_l = sin_pos.clone()
         sin_pos_r = sin_pos.clone()
 
         self.ref_dof_pos = torch.zeros_like(self.dof_pos)
-        # left swing
+        # hip_pitch: symmetric full-sin reference (swing forward + stance push back)
+        self.ref_dof_pos[:, 0] = -sin_pos * self.cfg.rewards.final_swing_joint_delta_pos[0]
+        self.ref_dof_pos[:, 6] =  sin_pos * self.cfg.rewards.final_swing_joint_delta_pos[6]
+        # left non-hip-pitch: active only on swing half (sin < 0)
         sin_pos_l[sin_pos_l > 0] = 0
-        self.ref_dof_pos[:, 0] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[0]
         self.ref_dof_pos[:, 1] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[1]
         self.ref_dof_pos[:, 2] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[2]
         self.ref_dof_pos[:, 3] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[3]
         self.ref_dof_pos[:, 4] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[4]
         self.ref_dof_pos[:, 5] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[5]
-        # right
+        # right non-hip-pitch: active only on swing half (sin > 0)
         sin_pos_r[sin_pos_r < 0] = 0
-        self.ref_dof_pos[:, 6] = sin_pos_r *  self.cfg.rewards.final_swing_joint_delta_pos[6]
         self.ref_dof_pos[:, 7] = sin_pos_r *  self.cfg.rewards.final_swing_joint_delta_pos[7]
         self.ref_dof_pos[:, 8] = sin_pos_r *  self.cfg.rewards.final_swing_joint_delta_pos[8]
         self.ref_dof_pos[:, 9] = sin_pos_r *  self.cfg.rewards.final_swing_joint_delta_pos[9]
