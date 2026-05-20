@@ -704,6 +704,10 @@ class LeggedRobot(BaseTask):
         Returns:
             [torch.Tensor]: Torques sent to the simulation
         """
+        # Plan B: unflip right knee/ankle_pitch from symmetric space back to physical space
+        if hasattr(self, 'symmetry_flip'):
+            actions = actions * self.symmetry_flip
+
         # pd controller
         actions_scaled = actions * self.cfg.control.action_scale
         if self.cfg.domain_rand.add_lag:
@@ -737,6 +741,10 @@ class LeggedRobot(BaseTask):
             motor_strength_ranges = self.cfg.domain_rand.torque_multiplier_range
             self.torque_multi = torch_rand_float(motor_strength_ranges[0], motor_strength_ranges[1], (self.num_envs,self.num_actions), device=self.device)
             torques *= self.torque_multi
+
+        # Plan B: flip torques back to physical space for right knee/ankle_pitch
+        if hasattr(self, 'symmetry_flip'):
+            torques = torques * self.symmetry_flip
 
         return torch.clip(torques, -self.torque_limits, self.torque_limits)
 

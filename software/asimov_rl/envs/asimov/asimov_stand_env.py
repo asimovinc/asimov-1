@@ -123,6 +123,14 @@ class AsimovStandEnv(LeggedRobot):
         self.feet_height = torch.zeros((self.num_envs, 2), device=self.device)
         self.ref_dof_pos = torch.zeros((self.num_envs, self.num_actions), device=self.device)
 
+        # Plan B: sign-flip mask for right knee (idx 9) and right ankle_pitch (idx 10).
+        # Asimov uses axis-reversal for these joints (left axis="0 1 0", right="0 -1 0"),
+        # so symmetric motions require opposite-sign q values. This flips them to
+        # "symmetric space" for the policy, then flips back before PD control.
+        self.symmetry_flip = torch.zeros(self.num_actions, device=self.device)
+        self.symmetry_flip[9] = -1.0   # right knee
+        self.symmetry_flip[10] = -1.0  # right ankle_pitch
+
 
     def _push_robots(self):
         """ Random pushes the robots. Emulates an impulse by setting a randomized base velocity.
@@ -279,35 +287,23 @@ class AsimovStandEnv(LeggedRobot):
                 self.rand_push_torque.zero_()
 
     def compute_ref_state(self):
-        # Asimov-specific change: hip_pitch reference uses the FULL sin wave so
-        # the stance leg gets a "push back" signal symmetric to the swing leg's
-        # "swing forward" signal. The original X1 logic clamped each leg's sin
-        # to one half cycle (swing only), which works for X1 (hip range ±π,
-        # default ±0.4 — policy has both directions accessible by symmetry).
-        # On Asimov the asymmetric joint range [-2.094, +1.0] PLUS default of
-        # ∓0.20 left the policy with no reference signal to extend the hip
-        # backward during stance, so it learned to shuffle without push-off.
-        # Other joints stay clamped: knee can't bend backward at all (range
-        # [0, 1.5] for left), and hip_yaw/hip_roll/ankle have no benefit from
-        # double-sided motion.
         phase = self._get_phase()
         sin_pos = torch.sin(2 * torch.pi * phase)
         sin_pos_l = sin_pos.clone()
         sin_pos_r = sin_pos.clone()
 
         self.ref_dof_pos = torch.zeros_like(self.dof_pos)
-        # hip_pitch: symmetric full-sin reference (swing forward + stance push back)
-        self.ref_dof_pos[:, 0] = -sin_pos * self.cfg.rewards.final_swing_joint_delta_pos[0]
-        self.ref_dof_pos[:, 6] =  sin_pos * self.cfg.rewards.final_swing_joint_delta_pos[6]
-        # left non-hip-pitch: active only on swing half (sin < 0)
+        # left leg: active only on swing half (sin < 0)
         sin_pos_l[sin_pos_l > 0] = 0
+        self.ref_dof_pos[:, 0] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[0]
         self.ref_dof_pos[:, 1] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[1]
         self.ref_dof_pos[:, 2] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[2]
         self.ref_dof_pos[:, 3] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[3]
         self.ref_dof_pos[:, 4] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[4]
         self.ref_dof_pos[:, 5] = -sin_pos_l * self.cfg.rewards.final_swing_joint_delta_pos[5]
-        # right non-hip-pitch: active only on swing half (sin > 0)
+        # right leg: active only on swing half (sin > 0)
         sin_pos_r[sin_pos_r < 0] = 0
+        self.ref_dof_pos[:, 6] = sin_pos_r *  self.cfg.rewards.final_swing_joint_delta_pos[6]
         self.ref_dof_pos[:, 7] = sin_pos_r *  self.cfg.rewards.final_swing_joint_delta_pos[7]
         self.ref_dof_pos[:, 8] = sin_pos_r *  self.cfg.rewards.final_swing_joint_delta_pos[8]
         self.ref_dof_pos[:, 9] = sin_pos_r *  self.cfg.rewards.final_swing_joint_delta_pos[9]
@@ -389,13 +385,20 @@ class AsimovStandEnv(LeggedRobot):
             (sin_pos, cos_pos, self.commands[:, :3] * self.commands_scale), dim=1)
 
         # critic no lag
-        diff = self.dof_pos - self.ref_dof_pos
+        # Plan B: flip right knee/ankle_pitch to symmetric space for observations
+        flip = self.symmetry_flip  # [-1 at idx 9, 10]
+        sym_dof_pos = self.dof_pos * flip
+        sym_dof_vel = self.dof_vel * flip
+        sym_actions = self.actions * flip
+        sym_ref_dof_pos = self.ref_dof_pos * flip
+
+        diff = sym_dof_pos - sym_ref_dof_pos
         # 73
         privileged_obs_buf = torch.cat((
             self.command_input,  # 2 + 3
-            (self.dof_pos - self.default_joint_pd_target) * self.obs_scales.dof_pos,  # 12
-            self.dof_vel * self.obs_scales.dof_vel,  # 12
-            self.actions,  # 12
+            (sym_dof_pos - self.default_joint_pd_target * flip) * self.obs_scales.dof_pos,  # 12
+            sym_dof_vel * self.obs_scales.dof_vel,  # 12
+            sym_actions,  # 12
             diff,  # 12
             self.base_lin_vel * self.obs_scales.lin_vel,  # 3
             self.base_ang_vel * self.obs_scales.ang_vel,  # 3
@@ -416,8 +419,8 @@ class AsimovStandEnv(LeggedRobot):
                 cond = self.dof_lag_timestep > self.last_dof_lag_timestep + 1
                 self.dof_lag_timestep[cond] = self.last_dof_lag_timestep[cond] + 1
                 self.last_dof_lag_timestep = self.dof_lag_timestep.clone()
-            self.lagged_dof_pos = self.dof_lag_buffer[torch.arange(self.num_envs), :self.num_actions, self.dof_lag_timestep.long()]
-            self.lagged_dof_vel = self.dof_lag_buffer[torch.arange(self.num_envs), -self.num_actions:, self.dof_lag_timestep.long()]
+            raw_lagged_dof_pos = self.dof_lag_buffer[torch.arange(self.num_envs), :self.num_actions, self.dof_lag_timestep.long()]
+            raw_lagged_dof_vel = self.dof_lag_buffer[torch.arange(self.num_envs), -self.num_actions:, self.dof_lag_timestep.long()]
         # random add dof_pos and dof_vel different lag
         elif self.cfg.domain_rand.add_dof_pos_vel_lag:
             if self.cfg.domain_rand.randomize_dof_pos_lag_timesteps_perstep:
@@ -426,7 +429,7 @@ class AsimovStandEnv(LeggedRobot):
                 cond = self.dof_pos_lag_timestep > self.last_dof_pos_lag_timestep + 1
                 self.dof_pos_lag_timestep[cond] = self.last_dof_pos_lag_timestep[cond] + 1
                 self.last_dof_pos_lag_timestep = self.dof_pos_lag_timestep.clone()
-            self.lagged_dof_pos = self.dof_pos_lag_buffer[torch.arange(self.num_envs), :, self.dof_pos_lag_timestep.long()]
+            raw_lagged_dof_pos = self.dof_pos_lag_buffer[torch.arange(self.num_envs), :, self.dof_pos_lag_timestep.long()]
 
             if self.cfg.domain_rand.randomize_dof_vel_lag_timesteps_perstep:
                 self.dof_vel_lag_timestep = torch.randint(self.cfg.domain_rand.dof_vel_lag_timesteps_range[0],
@@ -434,11 +437,15 @@ class AsimovStandEnv(LeggedRobot):
                 cond = self.dof_vel_lag_timestep > self.last_dof_vel_lag_timestep + 1
                 self.dof_vel_lag_timestep[cond] = self.last_dof_vel_lag_timestep[cond] + 1
                 self.last_dof_vel_lag_timestep = self.dof_vel_lag_timestep.clone()
-            self.lagged_dof_vel = self.dof_vel_lag_buffer[torch.arange(self.num_envs), :, self.dof_vel_lag_timestep.long()]
+            raw_lagged_dof_vel = self.dof_vel_lag_buffer[torch.arange(self.num_envs), :, self.dof_vel_lag_timestep.long()]
         # dof_pos and dof_vel has no lag
         else:
-            self.lagged_dof_pos = self.dof_pos
-            self.lagged_dof_vel = self.dof_vel
+            raw_lagged_dof_pos = self.dof_pos
+            raw_lagged_dof_vel = self.dof_vel
+
+        # Plan B: flip right knee/ankle_pitch to symmetric space for obs
+        self.lagged_dof_pos = raw_lagged_dof_pos * flip
+        self.lagged_dof_vel = raw_lagged_dof_vel * flip
 
         # imu lag, including rpy and omega
         if self.cfg.domain_rand.add_imu_lag:
@@ -456,8 +463,8 @@ class AsimovStandEnv(LeggedRobot):
             self.lagged_base_ang_vel = self.base_ang_vel[:,:3]
             self.lagged_base_euler_xyz = self.base_euler_xyz[:,-3:]
 
-        # obs q and dq
-        q = (self.lagged_dof_pos - self.default_dof_pos) * self.obs_scales.dof_pos
+        # obs q and dq (dof_pos flipped to symmetric space, default is physical → flip to match)
+        q = (self.lagged_dof_pos - self.default_dof_pos * flip) * self.obs_scales.dof_pos
         dq = self.lagged_dof_vel * self.obs_scales.dof_vel
 
         # 47
@@ -465,7 +472,7 @@ class AsimovStandEnv(LeggedRobot):
             self.command_input,  # 5 = 2D(sin cos) + 3D(vel_x, vel_y, aug_vel_yaw)
             q,    # 12
             dq,  # 12
-            self.actions,   # 12
+            sym_actions,   # 12 (Plan B: symmetric space)
             self.lagged_base_ang_vel * self.obs_scales.ang_vel,  # 3
             self.lagged_base_euler_xyz * self.obs_scales.quat,  # 3
         ), dim=-1)

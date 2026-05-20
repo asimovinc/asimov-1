@@ -137,8 +137,8 @@ class AsimovStandCfg(LeggedRobotCfg):
             'right_hip_pitch_joint':  0.20,     # mirror
             'right_hip_roll_joint':  -0.10,
             'right_hip_yaw_joint':    0.0,
-            'right_knee_joint':      -0.40,
-            'right_ankle_pitch_joint': 0.20,    # mirror
+            'right_knee_joint':      -0.40,     # mirrored axis: flexes in -q direction
+            'right_ankle_pitch_joint': 0.20,    # mirrored axis
             'right_ankle_roll_joint': 0.0,
         }
 
@@ -344,7 +344,7 @@ class AsimovStandCfg(LeggedRobotCfg):
         # is ±0.35 and default is now ±0.20; 0.13 leaves clearance vs limit.
         final_swing_joint_delta_pos = [
             -0.25,  0.05, 0.0,  0.35, -0.13, 0.0,   # left  (forward swing)
-            +0.25, -0.05, 0.0, -0.35, +0.13, 0.0,   # right (mirrored axes)
+            +0.25, -0.05, 0.0, -0.35, +0.13, 0.0,   # right (mirrored axes, env flips for symmetric policy)
         ]
         target_feet_height = 0.03
         target_feet_height_max = 0.06
