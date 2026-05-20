@@ -127,7 +127,7 @@ class AsimovStandEnv(LeggedRobot):
         # Asimov uses axis-reversal for these joints (left axis="0 1 0", right="0 -1 0"),
         # so symmetric motions require opposite-sign q values. This flips them to
         # "symmetric space" for the policy, then flips back before PD control.
-        self.symmetry_flip = torch.zeros(self.num_actions, device=self.device)
+        self.symmetry_flip = torch.ones(self.num_actions, device=self.device)
         self.symmetry_flip[9] = -1.0   # right knee
         self.symmetry_flip[10] = -1.0  # right ankle_pitch
 
