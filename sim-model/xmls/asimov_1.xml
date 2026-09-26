@@ -124,7 +124,7 @@
                 <!-- Ankle pitch collision removed - very short link, covered by ankle roll -->
                 <geom name="left_ankle_pitch_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="left_ankle_pitch_link.STL" class="visual" />
                 <body name="left_ankle_roll_link" pos="-0.0015 0 -0.01" quat="1.0 0.0 0.0 0.0">
-                  <joint name="left_ankle_roll_joint" type="hinge" ref="0.0" class="motor" range="-0.1 0.1" axis="-1 0 0" armature="0.0565056" />
+                  <joint name="left_ankle_roll_joint" type="hinge" ref="0.0" class="motor" range="-0.35 0.35" axis="-1 0 0" armature="0.0565056" />
                   <!-- New foot (ANKLE_B_NEW.STL): mass+inertia from friend's CAD; CoM corrected to ankle-local frame. -->
                   <inertial pos="0.0602 0 -0.0174" mass="0.44468" fullinertia="0.00022344252 0.00109591095 0.00118799414 0.00000001433 -0.00002496970 0.00000001266" />
                   <geom name="left_ankle_roll_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="left_ankle_roll_link.STL" class="visual" />
@@ -167,7 +167,7 @@
                 <!-- Ankle pitch collision removed - very short link, covered by ankle roll -->
                 <geom name="right_ankle_pitch_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_ankle_pitch_link.STL" class="visual" />
                 <body name="right_ankle_roll_link" pos="-0.0015 0 -0.01" quat="1.0 0.0 0.0 0.0">
-                  <joint name="right_ankle_roll_joint" type="hinge" ref="0.0" class="motor" range="-0.1 0.1" axis="-1 0 0" armature="0.0565056" />
+                  <joint name="right_ankle_roll_joint" type="hinge" ref="0.0" class="motor" range="-0.35 0.35" axis="-1 0 0" armature="0.0565056" />
                   <!-- New foot (ANKLE_B_NEW.STL): mass+inertia from friend's CAD; CoM corrected to ankle-local frame. -->
                   <inertial pos="0.0602 0 -0.0174" mass="0.44468" fullinertia="0.00022344252 0.00109591095 0.00118799414 0.00000001433 -0.00002496970 0.00000001266" />
                   <geom name="right_ankle_roll_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_ankle_roll_link.STL" class="visual" />
