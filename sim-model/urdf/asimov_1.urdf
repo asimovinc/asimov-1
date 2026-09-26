@@ -227,7 +227,7 @@
     <parent link="left_ankle_pitch_link"/>
     <child link="left_ankle_roll_link"/>
     <axis xyz="-1 0 0"/>
-    <limit lower="-0.1" upper="0.1" effort="17" velocity="9.32"/>
+    <limit lower="-0.35" upper="0.35" effort="17" velocity="9.32"/>
   </joint>
   <link name="right_hip_pitch_link">
     <inertial>
@@ -425,7 +425,7 @@
     <parent link="right_ankle_pitch_link"/>
     <child link="right_ankle_roll_link"/>
     <axis xyz="-1 0 0"/>
-    <limit lower="-0.1" upper="0.1" effort="17" velocity="9.32"/>
+    <limit lower="-0.35" upper="0.35" effort="17" velocity="9.32"/>
   </joint>
   <link name="waist_yaw_link">
     <inertial>
