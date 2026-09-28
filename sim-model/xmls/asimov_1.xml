@@ -99,7 +99,7 @@
 
       <!-- ==================== LEFT LEG ==================== -->
       <body name="left_hip_pitch_link" pos="-0.052 0.0675 -0.044045" quat="1.0 0.0 0.0 0.0">
-        <joint name="left_hip_pitch_joint" type="hinge" ref="0.0" class="motor" range="-2.094395 1" axis="0 1 0" armature="0.095625" />
+        <joint name="left_hip_pitch_joint" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 1 0" armature="0.095625" />
         <inertial pos="0.00172895433511948 0.0360563262466087 0.000569266739481308" mass="1.05630112217695" fullinertia="0.00069232989080039 0.000812587075023366 0.000753380131267806 -3.57661961446218E-05 1.84003368216204E-06 1.2003147635279E-05" />
         <geom name="left_hip_pitch_link_collision" class="body_capsule" fromto="0 0.02 0 0 0.04 0" size="0.04"/>
         <geom name="left_hip_pitch_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="left_hip_pitch_link.STL" class="visual" />
@@ -142,7 +142,7 @@
 
       <!-- ==================== RIGHT LEG ==================== -->
       <body name="right_hip_pitch_link" pos="-0.0519999999999999 -0.0675 -0.0440449999999999" quat="1.0 0.0 0.0 0.0">
-        <joint name="right_hip_pitch_joint" type="hinge" ref="0.0" class="motor" range="-1 2.094395" axis="0 -1 0" armature="0.095625" />
+        <joint name="right_hip_pitch_joint" type="hinge" ref="0.0" class="motor" range="-1.57 1.57" axis="0 -1 0" armature="0.095625" />
         <inertial pos="0.00172891543963928 -0.0360560777469901 0.000568830845064178" mass="1.05629742879001" fullinertia="0.000692329136191241 0.00081258255865219 0.000753384108654712 3.57650372725171E-05 1.84099820196341E-06 -1.20075387086281E-05" />
         <geom name="right_hip_pitch_link_collision" class="body_capsule" fromto="0 -0.02 0 0 -0.04 0" size="0.04"/>
         <geom name="right_hip_pitch_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hip_pitch_link.STL" class="visual" />
@@ -219,7 +219,7 @@
               <!-- Shoulder yaw collision removed - covered by adjacent links -->
               <geom name="right_shoulder_yaw_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_shoulder_yaw_link.STL" class="visual" />
               <body name="right_elbow_link" pos="0 0 -0.0966012999998862" quat="1.0 0.0 0.0 0.0">
-                <joint name="right_elbow_joint" type="hinge" ref="-0.785398" class="motor" range="-2.443461 0.000000" axis="0 1 0" armature="0.0282528" />
+                <joint name="right_elbow_joint" type="hinge" ref="-0.785398" class="motor" range="-2.0944 0" axis="0 1 0" armature="0.0282528" />
                 <inertial pos="0.0523755985403483 -9.84304228299482E-05 -0.0444425911778195" mass="0.662314258886328" fullinertia="0.000331709977441628 0.000418432878642283 0.00036781692231096 1.14378770241915E-07 5.58706757420512E-05 -9.7404268443382E-08" />
                 <geom name="right_elbow_link_collision" class="body_capsule" fromto="0 -0.01 0 0.09 -0.01 -0.07" size="0.03"/>
                 <geom name="right_elbow_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_elbow_link.STL" class="visual" />
@@ -250,7 +250,7 @@
               <!-- Shoulder yaw collision removed - covered by adjacent links -->
               <geom name="left_shoulder_yaw_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="left_shoulder_yaw_link.STL" class="visual" />
               <body name="left_elbow_link" pos="0 0 -0.0963013000001065" quat="1.0 0.0 0.0 0.0">
-                <joint name="left_elbow_joint" type="hinge" ref="0.785398" class="motor" range="0.000000 2.443461" axis="0 -1 0" armature="0.0282528" />
+                <joint name="left_elbow_joint" type="hinge" ref="0.785398" class="motor" range="0 2.0944" axis="0 -1 0" armature="0.0282528" />
                 <inertial pos="0.0523756419047112 9.84723348319283E-05 -0.0444426425125844" mass="0.662317601299901" fullinertia="0.000331709518475136 0.000418430298151774 0.000367817844214662 -1.15265452395985E-07 5.58734246475865E-05 9.67795385366457E-08" />
                 <geom name="left_elbow_link_collision" class="body_capsule" fromto="0 0.01 0 0.09 0.01 -0.07" size="0.03"/>
                 <geom name="left_elbow_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="left_elbow_link.STL" class="visual" />
