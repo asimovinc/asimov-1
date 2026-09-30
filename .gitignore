@@ -37,8 +37,9 @@ fp-info-cache
 # Exported BOM files
 *.xml
 *.csv
-# ...but keep MuJoCo model files
+# ...but keep MuJoCo model files and fabrication manifest
 !sim-model/xmls/*.xml
+!mechanical/FABRICATION_MANIFEST.csv
 
 # Archived Backups (KiCad 6.0)
 **/*-backups/*.zip
