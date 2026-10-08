@@ -26845,7 +26845,7 @@
 			(uuid "04855343-6b1d-4b34-adee-adafe425054b")
 		)
 		(embedded_fonts no)
-		(model "/home/jasshank/work/menlo/easyeda/lcsc_lib.3dshapes/LGA-14_L2.5-W3.0-H0.9-P0.50.wrl"
+		(model "${KIPRJMOD}/lcsc_lib.3dshapes/LGA-14_L2.5-W3.0-H0.9-P0.50.step"
 			(offset
 				(xyz 0.24 -0.37 0)
 			)
